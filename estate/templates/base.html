@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}", type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css')}}" type="text/css">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body> 
+    <header>
+        <!-- Navbar -->
+        {% include "partials/navbar.html" %}
+    </header>
+    <main>
+        <!-- Main content -->
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <!-- Footer -->
+        <!-- include footer here like navbar -->
+    </footer>
+
+    <script src="{{url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

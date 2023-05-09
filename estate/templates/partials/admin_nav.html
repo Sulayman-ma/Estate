@@ -1,0 +1,33 @@
+<nav>
+    <!-- <div class="home">
+        <a href="{{ url_for('.dash') }}">Test Title</a>
+    </div> -->
+    <nav class="u-pull-right">
+        <!-- EACH WITH IT'S OWN DROP DOWN TO LIST MAINA ACTIONS -->
+        <div>
+            <li style="list-style: none;">
+                <a href="{{ url_for('.dash') }}">Dashboard</a>
+            </li>
+            <div class="dropdown">
+                <a class="dropbtn">Staff &#8675;</a>
+                <ul class="dropdown-content">
+                    <li><a href="{{ url_for('.all_staff') }}">All Staff</a></li>
+                    <li><a href="{{ url_for('.register_staff') }}">Register Staff</a></li>
+                    <li><a href="{{ url_for('.edit_staff') }}">Edit Staff</a></li>
+                </ul>
+            </div>
+            <li style="list-style: none;">
+                <a href="{{ url_for('.residents') }}">Residents</a>
+            </li>
+            <li style="list-style: none;">
+                <a href="{{ url_for('.flats') }}">Flats</a>
+            </li>
+            <li style="list-style: none;">
+                <a href="{{ url_for('.payments') }}">Payment Records</a>
+            </li>
+            <li style="list-style: none;">
+                <a href="{{ url_for('.logout') }}">Logout</a>
+            </li>
+        </div>
+    </nav>
+</nav>

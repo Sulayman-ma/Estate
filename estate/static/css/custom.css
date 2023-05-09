@@ -1,0 +1,114 @@
+/* 
+MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
+-------------------------------------------------------------------------------*/
+
+
+
+/* Flash message categories
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.info { color: blue;  }
+
+.error { color: rgb(255, 30, 30); }
+
+.success { color: rgb(0, 148, 0); }
+
+.misc { color: rgb(255, 94, 0); }
+
+.warning { color: rgb(255, 94, 0); }
+
+
+/* Misc
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 20px;
+}
+
+h3 {
+    text-align: center;
+}
+
+.stats {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+/* Nav bar
+-------------------------------------------------- */
+nav {
+    background-color: #333;
+    overflow: hidden;
+}
+
+nav div {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav div li { float: left; }
+
+nav div li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* home button */
+.home {
+    padding: 14px 16px;
+    float: left;
+}
+
+.home a {
+    list-style-type: none;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* drop down */
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content li {
+    float: none;
+    color: white;
+    text-align: left;
+    display: block;
+    padding: 0px 5px;
+    margin: 0;
+}
+
+.dropdown:hover .dropdown-content { display: block; }
+
+.dropbtn:hover { color: blue; }

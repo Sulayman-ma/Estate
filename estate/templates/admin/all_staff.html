@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+<header>
+    {% include 'partials/admin_nav.html' %}
+</header>
+
+{% block content %}
+
+<div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <div class="container">
+        <table class="u-full-width staff">
+            <caption>All Staff Members</caption>
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Role</th>
+                    <th>Name</th>
+                    <th>Is Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for staff in staffs %}
+                <tr>
+                    <td>{{ staff.staff_id }}</td>
+                    <td>{{ staff.role.name }}</td>
+                    <td>{{ staff.fullname }}</td>
+                    {% if staff.is_active %}
+                    <td><input type="checkbox" checked disabled></td>
+                    {% else %}
+                    <td><input type="checkbox" disabled></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <div class="paginate">
+            {% if staffs.has_prev %}
+            <a href="{{ url_for('.all_staff', page=staffs.prev_num) }}">Prev</a>
+            {% else %} # {% endif %}
+            |
+            {% if staffs.has_next %}
+            <a href="{{ url_for('.all_staff', page=staffs.next_num) }}">Next</a>
+            {% else %} # {% endif %}
+        </div>      
+    </div>
+</div>
+
+{% endblock %}
