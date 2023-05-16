@@ -84,7 +84,7 @@ def flats():
 def login():
     form = Login()
     if form.validate_on_submit():
-        admin = Admin.query.filter_by(admin_id=form.admin_id.data).first()
+        admin = Admin.query.filter_by(admin_id=form.user_id.data).first()
         if admin is not None and admin.check_password(form.password.data):
             login_user(admin, remember=False)
             return redirect(url_for('.dash'))

@@ -21,8 +21,8 @@ class EditStaffInfo(FlaskForm):
 
 
 class Login(FlaskForm):
-    admin_id = StringField(render_kw={
-        'placeholder': 'Admin ID',
+    user_id = StringField(render_kw={
+        'placeholder': 'User ID',
         'required': 'required',
         'class': []
     })

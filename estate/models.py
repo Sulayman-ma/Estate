@@ -74,6 +74,7 @@ class Resident(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(128))
     resident_id  = db.Column(db.String(64), unique=True, index=True)
+    password_hash = db.Column(db.String(128))
     email = db.Column(db.String(128))
     number = db.Column(db.Integer)
     is_active = db.Column(db.Boolean, default=False)
@@ -85,6 +86,18 @@ class Resident(db.Model):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    @property
+    def password(self):
+        raise AttributeError('PROPERTY NOT ACCESSIBLE.')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Verifies resident password"""
+        return check_password_hash(self.password_hash, password)
 
 
 class Payment(db.Model):
