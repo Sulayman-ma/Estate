@@ -23,12 +23,13 @@
                     <th>Role</th>
                     <th>Name</th>
                     <th>Is Active</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for staff in staffs %}
                 <tr>
-                    <td>{{ staff.staff_id }}</td>
+                    <td>{{ staff.user_tag }}</td>
                     <td>{{ staff.role.name }}</td>
                     <td>{{ staff.fullname }}</td>
                     {% if staff.is_active %}
@@ -36,6 +37,7 @@
                     {% else %}
                     <td><input type="checkbox" disabled></td>
                     {% endif %}
+                    <td><a href="{{ url_for('.edit_staff', id=staff.id) }}">Edit</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

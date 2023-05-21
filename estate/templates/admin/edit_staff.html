@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+<header>
+    {% include 'partials/admin_nav.html' %}
+</header>
+
+{% block title %}Register Staff{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- MAIN CONTENT -->
+    <h2>Register Staff</h2>
+    <hr>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+       <!-- FLASH MESSAGES -->
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
+        <div class="flash">
+            <span class="{{ category }}">{{ msg }}</span>
+        </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="five columns">
+                {{ form.fullname() }}
+            </div>
+            <div class="five columns">
+                {{ form.email() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="five columns">
+                {{ form.number() }}
+            </div>
+            <div class="five columns">
+                {{ form.role() }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="five columns">
+                Active
+                {{ form.is_active() }}
+            </div>
+            <div class="five columns">
+                {{ form.save(class='button-primary') }}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

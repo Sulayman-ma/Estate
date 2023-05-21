@@ -33,7 +33,7 @@
                     {% for agent in agents %}
                     {% if agent.is_active %}
                     <tr>
-                        <td>{{ agent.staff_id }}</td>
+                        <td>{{ agent.user_tag }}</td>
                         <td>{{ agent.role.name }}</td>
                         <td>{{ agent.fullname }}</td>
                         <td><input type="checkbox" checked disabled></td>
@@ -50,9 +50,8 @@
             <div class="stats">
                 <span>Platform Statistics</span>
                 <h5>Total staff: {{ total_staff }}</h5>
-                <h6>Building Managers: {{ managers.all()|length }}</h6>
-                <h6>Agents: {{ agents.all()|length }}</h6>
-                <h6>Cleaners: {{ cleaners.all()|length }}</h6>
+                <h6>Agents: {{ agents.count() }}</h6>
+                <h6>Cleaners: {{ cleaners }}</h6>
             </div>
         </div>
     </div>
