@@ -6,7 +6,7 @@ from . import db, login_manager
 
 
 class User(UserMixin, db.Model):
-    """Base user model for all application users"""
+    """User model for all application users."""
     __tablename__ = 'users'
 
     # properties
@@ -14,9 +14,9 @@ class User(UserMixin, db.Model):
     user_tag = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(128))
     fullname = db.Column(db.String(128))
-    email = db.Column(db.String(128), unique=True)
+    email = db.Column(db.String(128))
     number = db.Column(db.String(64))
-    is_active = db.Column(db.Boolean, default=True)
+    is_active = db.Column(db.BOOLEAN)
     joined_date = db.Column(db.DateTime, default=datetime.now())
     
     @property
@@ -30,6 +30,7 @@ class User(UserMixin, db.Model):
     # relationships
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     payments = db.relationship('Payment', backref='resident', lazy='dynamic')
+    flat = db.relationship('Flat', uselist=False, backref='resident')
 
     # model methods
     def __init__(self, **kwargs):
@@ -64,8 +65,8 @@ class User(UserMixin, db.Model):
 
 
 @login_manager.user_loader
-def load_user(user_tag):
-    return User.query.get(user_tag)
+def load_user(user_id):
+    return User.query.get(user_id)
 
 
 class Role(db.Model):
@@ -73,7 +74,8 @@ class Role(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    # role to users relationship
+    
+    # relationships
     users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __init__(self, **kwargs):
@@ -92,18 +94,81 @@ class Role(db.Model):
 
 
 class Payment(db.Model):
-    """Payment record class"""
+    """Payment record model."""
     __tablename__ = 'payments'
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer)
     description = db.Column(db.String(128))
     timestamp = db.Column(db.DateTime, default=datetime.now())
+
     # relationships
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    flat_id = db.Column(db.Integer, db.ForeignKey('flats.id'), name='fk_payment_flat')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def __repr__(self):
         return '<Payment {} - {}>'.format(self.user_id, self.timestamp)
+
+
+class FlatType(db.Model):
+    """Flat types model with flat description, specifics and rent amount."""
+    __tablename__ = 'flattypes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    description = db.Column(db.Text())
+    rent = db.Column(db.Integer)
+    bedrooms = db.Column(db.Integer)
+    bathrooms = db.Column(db.Integer, default=bedrooms)
+    total = db.Column(db.Integer)
+    num_available = db.Column(db.Integer, default=total)
+    
+    # relationships
+    flats = db.relationship('Flat', backref='flattype', lazy='dynamic')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __repr__(self):
+        return '<{} - ₦{:,}>'.format(self.name, self.rent)
+
+
+class Flat(db.Model):
+    """Flat record per flat in every block in the estate."""
+    __tablename__ = 'flats'
+
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer)
+    # block = db.Column(db.CHAR)
+
+    # relationships
+    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_flat_flattype')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_flat_resident')
+    payment = db.relationship('Payment', backref='flat', uselist=False)
+    block_id = db.Column(db.Integer, db.ForeignKey('blocks.id', name='fk_flat_block'))
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __repr__(self):
+        return '<Flat {}, Block {}>'.format(self.number, self.block_id)
+
+    
+class Block(db.Model):
+    """Block model. To be managed only on the admin side and used for tracking and any necessary features and grouping of flats."""  
+    __tablename__ = 'blocks'
+
+    id = db.Column(db.Integer, primary_key=True)
+    letter = db.Column(db.CHAR)
+
+    # relationships
+    flats = db.relationship('Flat', backref='block', lazy='dynamic')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    
+    def __repr__(self):
+        return '<Block {}>'.format(self.letter)

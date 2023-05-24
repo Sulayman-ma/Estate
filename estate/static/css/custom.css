@@ -39,13 +39,52 @@ h3 {
     align-items: center;
 }
 
+.shadow-div {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 10px;
+}
+
+.home-cards {
+    background-color: rgb(149, 186, 255);
+}
+
+.banner {
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+    color: rgb(0, 0, 0);
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: solid;
+    margin: 30px 0 30px 0;
+    padding: 5%;
+    position: relative;
+}
+
+.banner-img {
+    width: 70%;
+}
+
+.random-stuff {
+    margin: 30px 0 30px 0;
+    padding: 5%;
+    background-color: rgb(68, 68, 68);
+    color: white;
+}
+
+.search-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
 
 
 
 /* Nav bar
 -------------------------------------------------- */
 nav {
-    background-color: #333;
+    background-color: rgb(104, 104, 104);
     overflow: hidden;
 }
 
@@ -77,6 +116,10 @@ nav div li a {
     text-decoration: none;
 }
 
+.nav-icon {
+    width: 7%;
+}
+
 /* drop down */
 .dropdown {
     float: left;
@@ -94,7 +137,7 @@ nav div li a {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #333;
+    background-color: rgb(104, 104, 104);
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -112,3 +155,31 @@ nav div li a {
 .dropdown:hover .dropdown-content { display: block; }
 
 .dropbtn:hover { color: blue; }
+
+
+
+/* Flats and Lease Pages
+-------------------------------------------------- */
+.flat-col {
+    margin: 5% 0 0 0;
+    padding: 3%;
+    background-color: rgb(240, 255, 255);
+}
+
+.flat-banner {}
+
+.flat-desc {}
+
+.rent-box {}
+
+.lease-title { text-align: center; }
+
+.flat-img {
+    width: 100%;
+}
+
+a.cst-btn {
+    background-color: rgb(68, 68, 68);
+    border-color: rgb(68, 68, 68);
+    color: rgb(240, 255, 255);
+}

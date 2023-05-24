@@ -43,7 +43,7 @@ class EditStaffInfo(FlaskForm):
     fullname = StringField(render_kw={
         'placeholder': 'Full Name'
     })
-    email = EmailField(render_kw={'placeholder': 'Email'}, validators=[Email()])
+    email = EmailField(render_kw={'placeholder': 'Email'}, validators=[])
     number = TelField(render_kw={
         'placeholder': 'Number'
     })
@@ -55,6 +55,7 @@ class EditStaffInfo(FlaskForm):
 
 
 class Login(FlaskForm):
+    """User login, applicable to all roles."""
     user_tag = StringField(render_kw={
         'placeholder': 'User Tag',
         'required': 'required',
@@ -63,4 +64,6 @@ class Login(FlaskForm):
         'placeholder': 'Password',
         'required': 'required',
     })
-    login = SubmitField(label='Login')
+    login = SubmitField(label='Login', render_kw={
+        'class': 'button-primary'
+    })

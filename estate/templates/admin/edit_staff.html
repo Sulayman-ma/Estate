@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-<header>
-    {% include 'partials/admin_nav.html' %}
-</header>
-
 {% block title %}Register Staff{% endblock %}
 
 {% block content %}
+
+<header>
+    {% include 'partials/admin_nav.html' %}
+</header>
 
 <div class="container">
     <!-- MAIN CONTENT -->
@@ -15,6 +15,7 @@
 
     <form method="POST">
         {{ form.hidden_tag() }}
+        <!-- {{ form.csrf_token }} -->
 
        <!-- FLASH MESSAGES -->
         {% for category, msg in get_flashed_messages(with_categories=True) %}
@@ -22,6 +23,12 @@
             <span class="{{ category }}">{{ msg }}</span>
         </div>
         {% endfor %}
+
+        {% if form.form_errors %}
+        {% for error in form.form_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        {% endif %}
 
         <div class="row">
             <div class="five columns">

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Flats{% endblock %}
+
+{% block content %}
+
+<header>
+    <!-- Navbar -->
+    {% include "partials/navbar.html" %}
+</header>
+
+<div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <!-- MAIN CONTENT -->
+    <div class="row">
+        {% for type in types %}
+        <div class="six columns shadow-div flat-col">
+            <div class="flat-banner">
+                <img src="{{ url_for('static', filename='img/flat.jpg') }}" class="flat-img">
+            </div>
+            <h2>{{ type.name }}</h2>
+
+            <h6>Bedrooms - {{ type.bedrooms }}</h6>
+            <h6>Bathrooms - {{ type.bathrooms }}</h6>
+            <h6>Available - {{ type.num_available }}</h6>
+            <h6>For a tour, please contact us at <a href="mailto:swifttour@hotmail.com">Swift Tour</a> to make a reservation.</h6>
+            <hr>
+
+            <h4 class="flat-desc">Description</h4>
+            <p>{{ type.description }}</p>
+
+            <div class="rent-box">
+                <h6>Rent Price: ₦{{ '{:,}'.format(type.rent) }}</h6>
+                <a href="{{ url_for('.lease') }}" class="cst-btn button">RENT NOW</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

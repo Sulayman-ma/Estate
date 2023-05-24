@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
+{% block content %}
+
 <header>
     {% include 'partials/admin_nav.html' %}
 </header>
-
-{% block content %}
 
 <div class="container">
     <!-- FLASH MESSAGES -->
@@ -19,35 +19,35 @@
     <div class="row">
         <div class="six columns">
             <!-- List of all active agents -->
-            <table class="u-full-width">
-                <caption>Active Agents</caption>
+            <table class="u-full-width shadow-div">
+                <!-- <span>Active Agents</span> -->
                 <thead>
                     <tr>
-                        <th>Staff ID</th>
-                        <th>Role</th>
+                        <th>Agent ID</th>
                         <th>Name</th>
                         <th>Is Active</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for agent in agents %}
-                    {% if agent.is_active %}
                     <tr>
                         <td>{{ agent.user_tag }}</td>
-                        <td>{{ agent.role.name }}</td>
                         <td>{{ agent.fullname }}</td>
-                        <td><input type="checkbox" checked disabled></td>
+                        {% if agent.is_active %}
+                        <td>✔</td>
+                        {% else %}
+                        <td>❌</td>
+                        {% endif %}
                     </tr>
-                    {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="u-pull-right">
+            <!-- <div class="u-pull-right">
                 <a href="{{ url_for('.all_staff') }}">View all staff...</a>
-            </div>
+            </div> -->
         </div>
         <div class="six columns">
-            <div class="stats">
+            <div class="stats shadow-div">
                 <span>Platform Statistics</span>
                 <h5>Total staff: {{ total_staff }}</h5>
                 <h6>Agents: {{ agents.count() }}</h6>
