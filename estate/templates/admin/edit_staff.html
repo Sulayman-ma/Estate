@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Register Staff{% endblock %}
+{% block title %}Edit Staff{% endblock %}
 
 {% block content %}
 
@@ -23,12 +23,6 @@
             <span class="{{ category }}">{{ msg }}</span>
         </div>
         {% endfor %}
-
-        {% if form.form_errors %}
-        {% for error in form.form_errors %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        {% endif %}
 
         <div class="row">
             <div class="five columns">

@@ -61,29 +61,41 @@ def lease():
 def make_payment():
     flat_types = FlatType.query.all()
     if request.method == 'POST':
-        category = request.form.get('flat_type')
-        flat_type = FlatType.query.filter_by(name=category).first()
-        # process payment
-        payment = Payment(
-            amount = flat_type.rent,
-            description = 'Resident {}, flat type {}'.format(current_user.user_tag, flat_type.name),
-            timestamp = datetime.now(),
-            user_id = current_user.id
-        )
-        db.session.add(payment)
-        # update resident info
-        lease_start = datetime.now()
-        lease_duration = int(request.form.get('lease_duration'))
-        current_user.lease_start = lease_start
-        current_user.lease_duration = lease_duration
-        current_user.lease_expiry = lease_start + timedelta(days=lease_duration*365)
-        current_user.flattype_id = flat_type.id
+        try:
+            category = request.form.get('flat_type')
+            flat_type = FlatType.query.filter_by(name=category).first()
+            # process payment
+            payment = Payment(
+                amount = flat_type.rent,
+                description = 'Resident {}, flat type {}'.format(current_user.user_tag, flat_type.name),
+                timestamp = datetime.now(),
+                user_id = current_user.id
+            )
+            db.session.add(payment)
+            # update resident info
+            lease_start = datetime.now()
+            lease_duration = int(request.form.get('lease_duration'))
+            current_user.lease_start = lease_start
+            current_user.lease_duration = lease_duration
+            current_user.lease_expiry = lease_start + timedelta(days=lease_duration*365)
+            current_user.flattype_id = flat_type.id
 
-        db.session.add(current_user)
-        db.session.commit()
-        flash('Payment successful.', 'success')
-        return redirect(url_for('.profile'))
+            # update available number of flats
+            flat_type.num_available -= 1 
+
+            db.session.add(current_user)
+            db.session.commit()
+            flash('Payment successful.', 'success')
+            return redirect(url_for('.profile'))
+        except ValueError:
+            flash('⚠ Invalid input, please try again', 'error')
     return render_template('main/make_payment.html', flat_types=flat_types)
+
+
+@main.route('/renew_payment', methods=['GET', 'POST'])
+@login_required
+def renew_payment():
+    return 'Renew payment here'
 
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -95,7 +107,7 @@ def register():
             user = User(
                 fullname = form.fullname.data,
                 email = form.email.data,
-                number = form.number.data,
+                number = int(form.number.data),
                 password = form.password.data,
                 # resident role is ID 1, no conflicts here
                 role = Role.query.get(1),
@@ -108,10 +120,10 @@ def register():
             # after registeration, log them in and redirect to make payment
             login_user(user)
             return redirect(url_for('.make_payment'))
-        except ValidationError:
-            flash('Invalid input, please ensure passwords match and other data is valid.', 'error')
+        except ValueError:
+            flash('⚠ Invalid input, check passwords and other data', 'error')
         except:
-            flash('An unknown error has occured, please contact an admin.', 'error')
+            flash('⚠ An error has occured, please try again or contact an admin.', 'error')
     return render_template('main/register.html', form=form)
 
 
@@ -125,8 +137,12 @@ def login():
         user = User.query.filter_by(user_tag=form.user_tag.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user, remember=True)
-            return redirect(url_for('.profile'))
-        flash('Incorrect details.')
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('.profile')
+            return redirect(next)
+            # return redirect(url_for('.profile'))
+        flash('⚠ Incorrect details, ensure to use upper case for ID', 'error')
     return render_template('main/login.html', form=form)
 
 

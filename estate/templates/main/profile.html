@@ -58,8 +58,11 @@
         {% if current_user.flattype %}
         Flat Category - {{ current_user.flattype.name }} <br>
         Rent Amount - {{ '₦{:,}'.format(current_user.flattype.rent) }} <br>
-        Lease Duration - {{ current_user.lease_duration }} <br>
-        Expirirng On - {{ current_user.lease_expiry }}
+        Lease Duration - {{ current_user.lease_duration }} year(s)<br>
+        Expirirng On - {{ current_user.lease_expiry.strftime('%Y %B, %d') }}
+        <div>
+            <a href="{{ url_for('.renew_payment') }}" class="button button-primary">Renew Payment</a>
+        </div>
         {% else %}
         <p>User has no active lease. Kindly secure one to see lease details.</p>
         {% endif %}

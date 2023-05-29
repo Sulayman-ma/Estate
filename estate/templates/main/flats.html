@@ -18,30 +18,55 @@
     {% endfor %}
 
     <!-- MAIN CONTENT -->
-    <div class="row">
-        {% for type in types %}
-        <div class="six columns shadow-div flat-col">
-            <div class="flat-banner">
-                <img src="{{ url_for('static', filename='img/flat.jpg') }}" class="flat-img">
+    <div class="flat-box shadow-div">
+        <!-- Images Slideshow -->
+        <div class="slideshow-container">
+            <div class="mySlides2 fade">
+                <!-- <div class="numbertext">1 / 3</div> -->
+                <img class="u-max-full-width" src="{{ url_for('static', filename='img/flat1.jpg') }}">
             </div>
-            <h2>{{ type.name }}</h2>
-
-            <h6>Bedrooms - {{ type.bedrooms }}</h6>
-            <h6>Bathrooms - {{ type.bathrooms }}</h6>
-            <h6>Available - {{ type.num_available }}</h6>
-            <h6>For a tour, please contact us at <a href="mailto:swifttour@hotmail.com">Swift Tour</a> to make a reservation.</h6>
-            <hr>
-
-            <h4 class="flat-desc">Description</h4>
-            <p>{{ type.description }}</p>
-
-            <div class="rent-box">
-                <h6>Rent Price: ₦{{ '{:,}'.format(type.rent) }}</h6>
-                <a href="{{ url_for('.lease') }}" class="cst-btn button">RENT NOW</a>
+        
+            <div class="mySlides2 fade">
+                <!-- <div class="numbertext">2 / 3</div> -->
+                <img class="u-max-full-width" src="{{ url_for('static', filename='img/flat2.jpg') }}">
+            </div>
+        
+            <div class="mySlides2 fade">
+                <!-- <div class="numbertext">3 / 3</div> -->
+                <img class="u-max-full-width" src="{{ url_for('static', filename='img/flat3.jpg') }}">
+            </div>
+            <a class="prev" onclick="plusSlides(-1, 1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
+        </div>
+        {% for type in types %}
+        <!-- Suites Slideshow -->
+        <div class="slideshow-container">
+            <div class="mySlides1 fade">
+                <h2>{{ type.name }} Suites</h2>
+    
+                <h5 class="flat-desc">Description</h5>
+                <i>{{ type.description }}</i>
+            
+                <h6>Bedrooms - {{ type.bedrooms }}</h6>
+                <h6>Bathrooms - {{ type.bathrooms }}</h6>
+                <h6>Available - {{ type.num_available }}</h6>
+                <h6>For a tour, please contact us at <a href="mailto:swifttour@hotmail.com">Swift Tour</a> to make a reservation.</h6>
+            
+                <hr>
+            
+                <div class="rent-box">
+                    <h5>Rent Price: ₦{{ '{:,}'.format(type.rent) }}</h5>
+                    <a href="{{ url_for('.lease') }}" class="cst-btn button">RENT NOW</a>
+                </div>
             </div>
         </div>
         {% endfor %}
+        <div>
+            <a class="prev" onclick="plusSlides(-1, 0)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1, 0)">&#10095;</a>
+        </div>
     </div>
+
 </div>
 
 {% endblock %}

@@ -19,6 +19,10 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 
 /* Misc
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+* {
+    box-sizing: border-box;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     background-color: transparent;
@@ -189,22 +193,107 @@ nav div li a {
 
 /* Flats and Lease Pages
 -------------------------------------------------- */
-.flat-col {
+
+/* FLATS */
+.flat-box {
     margin: 5% 0 0 0;
     padding: 3%;
-    background-color: rgb(240, 255, 255);
+    /* background-color: rgb(119, 119, 119);
+    color: rgb(240, 255, 255); */
+    text-align: center;
+    width: 100%;
 }
 
-.flat-banner {}
-
-.flat-desc {}
-
-.rent-box {}
-
-.lease-title { text-align: center; }
-
 .flat-img {
+    width: 70%;
+}
+
+/* Slideshow container */
+.slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+}
+
+/* Hide the images by default */
+.mySlides1, .mySlides2 {
+    display: none;
+}
+
+
+/* Next & previous buttons */
+.prev, .next {
+    cursor: pointer;
+    /* position: absolute; */
+    /* top: 50%; */
+    width: auto;
+    margin-top: 10%;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next, .prev {
+    right: 0;
+    border-radius: 50%;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+    background-color: rgba(175, 175, 175, 0.8);
+}
+
+/* Caption text */
+.text {
+    color: #f2f2f2;
+    font-size: 15px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 8px;
     width: 100%;
+    text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot, .dot2 {
+    cursor: pointer;
+    margin: 0 10px;
+    display: inline-block;
+    transition: background-color 0.6s;
+}
+
+.active, .dot:hover, .dot2:hover {
+    height: 25px;
+    width: 25px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
 }
 
 a.cst-btn {
@@ -212,3 +301,8 @@ a.cst-btn {
     border-color: rgb(68, 68, 68);
     color: rgb(240, 255, 255);
 }
+
+
+
+/* LEASE */
+.lease-title { text-align: center; }

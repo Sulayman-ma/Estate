@@ -28,22 +28,27 @@
 
         <div class="row">
             <div class="ten columns">
+                {{ form.fullname.label }}
                 {{ form.fullname(class='u-full-width') }}
             </div>
         </div>
         <div class="row">
             <div class="five columns">
+                {{ form.number.label }}
                 {{ form.number(class='u-full-width') }}
             </div>
             <div class="five columns">
+                {{ form.email.label }}
                 {{ form.email(class='u-full-width') }}
             </div>
         </div>
         <div class="row">
             <div class="five columns">
+                <label for="">Password</label>
                 {{ form.password(class='u-full-width') }}
             </div>
             <div class="five columns">
+                <label for="">Confirm Password</label>
                 {{ form.password2(class='u-full-width') }}
             </div>
         </div>

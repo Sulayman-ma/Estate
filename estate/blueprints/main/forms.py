@@ -14,14 +14,14 @@ from ...models import FlatType
 
 
 class RegisterResident(FlaskForm):
-    fullname = StringField(render_kw={
+    fullname = StringField(label="Full Name", render_kw={
         'placeholder': 'Full Name',
         'required': 'required',
     })
-    email = EmailField(render_kw={
+    email = EmailField(label="E-mail", render_kw={
         'placeholder': 'Email', 'required': 'required',
         }, validators=[Email()])
-    number = TelField(render_kw={
+    number = TelField(label="Number", render_kw={
         'placeholder': 'Number',
         'required': 'required',
     })
@@ -38,11 +38,11 @@ class RegisterResident(FlaskForm):
 
 
 class Login(FlaskForm):
-    user_tag = StringField(render_kw={
-        'placeholder': 'User Tag',
+    user_tag = StringField(label="Resident ID", render_kw={
+        'placeholder': 'Resident ID',
         'required': 'required',
     })
-    password = PasswordField(render_kw={
+    password = PasswordField(label="Password", render_kw={
         'placeholder': 'Password',
         'required': 'required',
     })

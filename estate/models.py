@@ -129,8 +129,8 @@ class FlatType(db.Model):
     rent = db.Column(db.Integer)
     bedrooms = db.Column(db.Integer)
     bathrooms = db.Column(db.Integer, default=bedrooms)
-    total = db.Column(db.Integer)
-    num_available = db.Column(db.Integer, default=total)
+    # total = db.Column(db.Integer)
+    num_available = db.Column(db.Integer)
     
     # relationships
     # flats = db.relationship('Flat', backref='flattype', lazy='dynamic')

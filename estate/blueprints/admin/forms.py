@@ -44,7 +44,7 @@ class EditStaffInfo(FlaskForm):
     fullname = StringField(label="Full Name", render_kw={
         'placeholder': 'Full Name'
     })
-    email = EmailField(label="E-mail", render_kw={'placeholder': 'Email'}, validators=[])
+    email = EmailField(label="E-mail", render_kw={'placeholder': 'Email'})
     number = TelField(label="Number", render_kw={
         'placeholder': 'Number'
     })
@@ -58,7 +58,7 @@ class EditStaffInfo(FlaskForm):
 class Login(FlaskForm):
     """User login, applicable to all roles."""
     user_tag = StringField(label="Staff ID", render_kw={
-        'placeholder': 'User Tag',
+        'placeholder': 'Staff ID',
         'required': 'required',
     })
     password = PasswordField(label="Password", render_kw={
@@ -72,7 +72,7 @@ class Login(FlaskForm):
 
 class CreateFlatType(FlaskForm):
     name = StringField(label="Name", render_kw={
-        'placeholder': 'Category Name',
+        'placeholder': 'Name',
         'required': 'required',
     })
     rent = TelField(label="Rent", render_kw={
@@ -91,7 +91,40 @@ class CreateFlatType(FlaskForm):
         'placeholder': 'Number of Bathrooms',
         'required': 'required'
     })
-    total = TelField(label='Total', render_kw={
-        'placeholder': 'Total',
+    num_available = TelField(label='Available', render_kw={
+        'placeholder': 'Number Available',
         'required': 'required'
+    })
+    create = SubmitField(label='Create', render_kw={
+        'class': 'button-primary'
+    })
+
+
+class EditFlatType(FlaskForm):
+    name = StringField(label="Name", render_kw={
+        'placeholder': 'Name',
+        'required': 'required',
+    }, validators=[])
+    rent = TelField(label="Rent", render_kw={
+      'placeholder': 'Rent Amount',
+      'required': 'required'  
+    })
+    description = TextAreaField(label='Description', render_kw={
+        'placeholder': 'The best flat for the ocean view lovers, comes with...',
+        'required': 'required'
+    })
+    bedrooms = TelField(label='Bedrooms', render_kw={
+        'placeholder': 'Number of Bedrooms',
+        'required': 'required'
+    })
+    bathrooms = TelField(label='Bathrooms', render_kw={
+        'placeholder': 'Number of Bathrooms',
+        'required': 'required'
+    })
+    num_available = TelField(label='Available', render_kw={
+        'placeholder': 'Number Available',
+        'required': 'required'
+    })
+    save = SubmitField(label='Save Changes', render_kw={
+        'class': 'button-primary'
     })

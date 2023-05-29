@@ -1,12 +1,13 @@
 from . import admin
 from ... import db
-from ...models import User, Role
+from ...models import User, Role, FlatType
 from ...decorators import admin_required
 from .forms import (
     RegisterStaff,
     Login,
     EditStaffInfo,
-    CreateFlatType
+    CreateFlatType,
+    EditFlatType
 )
 from flask import(
     render_template,
@@ -123,7 +124,63 @@ def payments(id):
 @login_required
 @admin_required
 def flats():
-    return '<h2>Not Implemented</h2><p>Funcionality requires a prerequisite that is under development.</p>'
+    flats = FlatType.query.all()
+    return render_template('admin/flats.html', flats=flats)
+
+
+@admin.route('/admin/edit_flat/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_flat(id):
+    type = FlatType.query.get(id)
+    form = EditFlatType(type=type)
+    try:
+        if form.validate_on_submit():
+            type.name = form.name.data
+            type.rent = int(form.rent.data)
+            type.description = str(form.description.data)
+            type.bedrooms = int(form.bedrooms.data)
+            type.bathrooms = int(form.bathrooms.data)
+            type.num_available = int(form.num_available.data)
+            db.session.commit()
+            flash('Changes saved successfully ✔', 'success')
+            return redirect(url_for('.edit_flat', id=id))
+        form.name.data = type.name
+        form.rent.data = type.rent
+        form.description.data = type.description
+        form.bedrooms.data  = type.bedrooms
+        form.bathrooms.data = type.bathrooms
+        form.num_available.data = type.num_available
+    except ValueError:
+        flash('⚠ Invalid input, please check the fields again', 'error')
+    except:
+        flash('⚠ An error has occured, please try again or contact an admin.', 'error')
+    return render_template('admin/edit_flat.html', form=form)
+
+
+@admin.route('/admin/create_flat', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def create_flat():
+    form = CreateFlatType()
+    try:
+        type = FlatType()
+        if form.validate_on_submit():
+            type.name = form.name.data
+            type.rent = int(form.rent.data)
+            type.description = str(form.description.data)
+            type.bedrooms = int(form.bedrooms.data)
+            type.bathrooms = int(form.bathrooms.data)
+            type.num_available = int(form.num_available.data)
+            db.session.add(type)
+            db.session.commit()
+            flash('Creation successful ✔', 'success')
+            return redirect(url_for('.flats'))
+    except ValueError:
+        flash('⚠ Invalid input, please check the fields again', 'error')
+    # except:
+    #     flash('⚠ An error has occured, please try again or contact an admin.', 'error')
+    return render_template('admin/create_flat.html', form=form)
 
 
 @admin.route('/admin/login', methods=['GET', 'POST'])
@@ -134,8 +191,11 @@ def login():
         user = User.query.filter_by(user_tag=form.user_tag.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user, remember=False)
-            return redirect(url_for('.dash'))
-        flash("shinji, admin [user tag, password]")
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('.dash')
+            return redirect(next)
+        flash("⚠ Invalid login credentials", 'error')
     return render_template('admin/login.html', form=form)
 
 
