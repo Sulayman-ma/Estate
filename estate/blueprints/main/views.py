@@ -80,8 +80,8 @@ def make_payment():
             current_user.lease_expiry = lease_start + timedelta(days=lease_duration*365)
             current_user.flattype_id = flat_type.id
 
-            # update available number of flats
-            flat_type.num_available -= 1 
+            flat_type.num_available -= 1
+            flat_type.update_status()
 
             db.session.add(current_user)
             db.session.commit()

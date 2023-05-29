@@ -49,7 +49,9 @@
         <div class="six columns">
             <div class="stats shadow-div">
                 <span>Platform Statistics</span>
+                <h5>Residents: {{ residents.count() }}</h5>
                 <h5>Total staff: {{ total_staff }}</h5>
+                <h6>Managers: {{ managers }}</h6>
                 <h6>Agents: {{ agents.count() }}</h6>
                 <h6>Cleaners: {{ cleaners }}</h6>
             </div>

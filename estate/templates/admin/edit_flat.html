@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Register Staff{% endblock %}
+{% block title %}Edit Flat{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 
 <div class="container">
     <!-- MAIN CONTENT -->
-    <h2>Register Staff</h2>
+    <h2>Edit Flat</h2>
     <hr>
 
     <form method="POST">
@@ -50,14 +50,16 @@
                 {{ form.bathrooms(class='u-full-width') }}
             </div>
             <div class="four columns">
-                {{ form.total.label }}
-                {{ form.total(class='u-full-width') }}
+                {{ form.num_available.label }}
+                {{ form.num_available(class='u-full-width') }}
             </div>
         </div>
         <div class="row">
-            <div class="twelve columns">
-                {{ form.save(class='button-primary') }}
-            </div>
+            <label for="">
+                {{ form.is_available() }}
+                <span>Is Available</span>
+            </label>
+            {{ form.save(class='button-primary') }}
         </div>
     </form>
 </div>

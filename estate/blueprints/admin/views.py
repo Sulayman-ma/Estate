@@ -31,10 +31,12 @@ def dash():
     # order staff in descending order of active status using `desc()`
     agents = User.get_users('agent').order_by(User.is_active.desc())
     cleaners = User.get_users('cleaner').count()
+    managers = User.get_users('manager').count()
+    residents = User.get_users('resident')
     
     total_staff = agents.count() + cleaners
     return render_template(
-        'admin/dash.html', agents=agents, cleaners=cleaners, total_staff=total_staff
+        'admin/dash.html', agents=agents, cleaners=cleaners, total_staff=total_staff, residents=residents, managers=managers
     )
 
 
@@ -142,6 +144,10 @@ def edit_flat(id):
             type.bedrooms = int(form.bedrooms.data)
             type.bathrooms = int(form.bathrooms.data)
             type.num_available = int(form.num_available.data)
+            type.is_available = form.is_available.data
+
+            # in a case where the user updates numbers available but forgets to update availablity status
+            type.update_status()
             db.session.commit()
             flash('Changes saved successfully ✔', 'success')
             return redirect(url_for('.edit_flat', id=id))
@@ -151,6 +157,7 @@ def edit_flat(id):
         form.bedrooms.data  = type.bedrooms
         form.bathrooms.data = type.bathrooms
         form.num_available.data = type.num_available
+        form.is_available.data = type.is_available
     except ValueError:
         flash('⚠ Invalid input, please check the fields again', 'error')
     except:

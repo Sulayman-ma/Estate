@@ -26,7 +26,7 @@ class RegisterStaff(FlaskForm):
         'required': 'required',
     })
     role = SelectField(label="Role", choices=[
-        'AGENT', 'CLEANER'
+        'AGENT', 'CLEANER', 'MANAGER'
     ])
     password = PasswordField(EqualTo('password2', message='Passwords must match'), render_kw={
         'placeholder': 'Password',
@@ -49,7 +49,7 @@ class EditStaffInfo(FlaskForm):
         'placeholder': 'Number'
     })
     role = SelectField(label="Role", choices=[
-        'AGENT', 'CLEANER'
+        'AGENT', 'CLEANER', 'MANAGER'
     ], render_kw = {'disabled': 'disabled'})
     is_active = BooleanField()
     save = SubmitField(label='Save Changes')
@@ -125,6 +125,7 @@ class EditFlatType(FlaskForm):
         'placeholder': 'Number Available',
         'required': 'required'
     })
+    is_available = BooleanField()
     save = SubmitField(label='Save Changes', render_kw={
         'class': 'button-primary'
     })

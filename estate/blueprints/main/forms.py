@@ -9,7 +9,6 @@ from wtforms.fields import (
     SubmitField
 )
 from wtforms.validators import Email, EqualTo
-from ...models import FlatType
 
 
 

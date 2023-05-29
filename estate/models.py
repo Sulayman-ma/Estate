@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
         :param role: User role."""
         if role == 'staff':
             return User.query.filter_by(is_staff=True)
-        ids = {'resident': 1, 'agent': 2, 'cleaner': 3}
+        ids = {'resident': 1, 'agent': 2, 'cleaner': 3, 'manager': 5}
         return User.query.filter_by(role_id=ids[role])
 
 
@@ -68,6 +68,7 @@ class User(UserMixin, db.Model):
             hash = generate_password_hash(email_user)[-5:]
             tag = prefix + hash
             self.user_tag = tag.upper()
+            return
 
 
 @login_manager.user_loader
@@ -97,6 +98,7 @@ class Role(db.Model):
             rl = Role(name=role)
             db.session.add(rl)
         db.session.commit()
+        return
 
 
 class Payment(db.Model):
@@ -131,6 +133,7 @@ class FlatType(db.Model):
     bathrooms = db.Column(db.Integer, default=bedrooms)
     # total = db.Column(db.Integer)
     num_available = db.Column(db.Integer)
+    is_available = db.Column(db.BOOLEAN, default=True)
     
     # relationships
     # flats = db.relationship('Flat', backref='flattype', lazy='dynamic')
@@ -141,6 +144,15 @@ class FlatType(db.Model):
 
     def __repr__(self):
         return '<{} - ₦{:,}>'.format(self.name, self.rent)
+
+    def update_status(self):
+        """Updates number of available flats left for category and availability status."""
+        if self.num_available < 1:
+            self.is_available = False
+            return
+        self.is_available = True
+        return
+        
 
 
 # class Flat(db.Model):

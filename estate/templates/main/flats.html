@@ -55,8 +55,14 @@
                 <hr>
             
                 <div class="rent-box">
+                    {% if type.is_available %}
                     <h5>Rent Price: ₦{{ '{:,}'.format(type.rent) }}</h5>
                     <a href="{{ url_for('.lease') }}" class="cst-btn button">RENT NOW</a>
+                    {% else %}
+                    <h5>Rent Price: ₦{{ '{:,}'.format(type.rent) }}</h5>
+                    <input type="button" value="RENT NOW" disabled>
+                    <p class="error">CURRENTLY UNAVAILABLE</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
