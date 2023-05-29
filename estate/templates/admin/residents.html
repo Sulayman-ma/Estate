@@ -31,7 +31,7 @@
                 <th>Joined Since</th>
                 <th>Email</th>
                 <th>Number</th>
-                <th></th>
+                <!-- <th></th> -->
             </tr>
         </thead>
         <tbody>
@@ -44,9 +44,11 @@
                 <td>{{ r.joined_date }}</td>
                 <td>{{ r.email }}</td>
                 <td>{{ r.number }}</td>
+                {#
                 <td>
                     <a href="{{ url_for('.payments', id=r.id) }}" class="button">Payments</a>
                 </td>
+                #}
             </tr>
             {% endfor %}
         </tbody>

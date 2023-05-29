@@ -6,28 +6,29 @@ from wtforms.fields import (
     PasswordField,
     EmailField,
     TelField,
-    SubmitField
+    SubmitField,
+    TextAreaField
 )
 from wtforms.validators import Email, EqualTo
 
 
 
 class RegisterStaff(FlaskForm):
-    fullname = StringField(render_kw={
+    fullname = StringField(label="Full Name", render_kw={
         'placeholder': 'Full Name',
         'required': 'required',
     })
-    email = EmailField(render_kw={
+    email = EmailField(label="E-mail", render_kw={
         'placeholder': 'Email', 'required': 'required',
         }, validators=[Email()])
-    number = TelField(render_kw={
+    number = TelField(label="Number", render_kw={
         'placeholder': 'Number',
         'required': 'required',
     })
-    role = SelectField(choices=[
+    role = SelectField(label="Role", choices=[
         'AGENT', 'CLEANER'
     ])
-    password = PasswordField(EqualTo('password2', message='Passwords must match'),render_kw={
+    password = PasswordField(EqualTo('password2', message='Passwords must match'), render_kw={
         'placeholder': 'Password',
         'required': 'required',
     })
@@ -40,14 +41,14 @@ class RegisterStaff(FlaskForm):
 
 
 class EditStaffInfo(FlaskForm):
-    fullname = StringField(render_kw={
+    fullname = StringField(label="Full Name", render_kw={
         'placeholder': 'Full Name'
     })
-    email = EmailField(render_kw={'placeholder': 'Email'}, validators=[])
-    number = TelField(render_kw={
+    email = EmailField(label="E-mail", render_kw={'placeholder': 'Email'}, validators=[])
+    number = TelField(label="Number", render_kw={
         'placeholder': 'Number'
     })
-    role = SelectField(choices=[
+    role = SelectField(label="Role", choices=[
         'AGENT', 'CLEANER'
     ], render_kw = {'disabled': 'disabled'})
     is_active = BooleanField()
@@ -56,14 +57,41 @@ class EditStaffInfo(FlaskForm):
 
 class Login(FlaskForm):
     """User login, applicable to all roles."""
-    user_tag = StringField(render_kw={
+    user_tag = StringField(label="Staff ID", render_kw={
         'placeholder': 'User Tag',
         'required': 'required',
     })
-    password = PasswordField(render_kw={
+    password = PasswordField(label="Password", render_kw={
         'placeholder': 'Password',
         'required': 'required',
     })
     login = SubmitField(label='Login', render_kw={
         'class': 'button-primary'
+    })
+
+
+class CreateFlatType(FlaskForm):
+    name = StringField(label="Name", render_kw={
+        'placeholder': 'Category Name',
+        'required': 'required',
+    })
+    rent = TelField(label="Rent", render_kw={
+      'placeholder': 'Rent Amount',
+      'required': 'required'  
+    })
+    description = TextAreaField(label='Description', render_kw={
+        'placeholder': 'The best flat for the ocean view lovers, comes with...',
+        'required': 'required'
+    })
+    bedrooms = TelField(label='Bedrooms', render_kw={
+        'placeholder': 'Number of Bedrooms',
+        'required': 'required'
+    })
+    bathrooms = TelField(label='Bathrooms', render_kw={
+        'placeholder': 'Number of Bathrooms',
+        'required': 'required'
+    })
+    total = TelField(label='Total', render_kw={
+        'placeholder': 'Total',
+        'required': 'required'
     })

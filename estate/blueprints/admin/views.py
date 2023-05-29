@@ -5,7 +5,8 @@ from ...decorators import admin_required
 from .forms import (
     RegisterStaff,
     Login,
-    EditStaffInfo
+    EditStaffInfo,
+    CreateFlatType
 )
 from flask import(
     render_template,

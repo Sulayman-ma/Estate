@@ -32,24 +32,30 @@
 
         <div class="row">
             <div class="five columns">
+                {{ form.fullname.label }}
                 {{ form.fullname() }}
             </div>
             <div class="five columns">
+                {{ form.email.label }}
                 {{ form.email() }}
             </div>
         </div>
         <div class="row">
             <div class="five columns">
+                {{ form.number.label }}
                 {{ form.number() }}
             </div>
             <div class="five columns">
+                {{ form.role.label }}
                 {{ form.role() }}
             </div>
         </div>
         <div class="row">
             <div class="five columns">
-                Active
-                {{ form.is_active() }}
+                <label for="">
+                    {{ form.is_active() }}
+                    <span>Active</span>
+                </label>
             </div>
             <div class="five columns">
                 {{ form.save(class='button-primary') }}
