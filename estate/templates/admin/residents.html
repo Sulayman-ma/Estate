@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Residents{% endblock %}
+
 {% block content %}
 
 <header>
@@ -15,38 +17,43 @@
     {% endfor %}
 
     <div class="search-div">
-        <input type="text" onkeyup="search()" placeholder="Search for staff by name" id="searchBtn">
+        <input type="text" onkeyup="search()" placeholder="Search for resident by name" id="searchBtn">
     </div>
 
     <table class="u-full-width staff">
-        <caption>All Staff Members</caption>
+        <caption>All Estate Residents</caption>
         <thead>
             <tr>
-                <th>Staff ID</th>
-                <th>Role</th>
+                <th>Resident ID</th>
                 <th>Name</th>
-                <th>Is Active</th>
+                <th>Flat</th>
+                <th>Block</th>
+                <th>Joined Since</th>
+                <th>Email</th>
+                <th>Number</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            {% for staff in staffs %}
-            <tr class="{{ staff.fullname }}">
-                <td>{{ staff.user_tag }}</td>
-                <td>{{ staff.role.name }}</td>
-                <td>{{ staff.fullname }}</td>
-                {% if staff.is_active %}
-                <td>✔</td>
-                {% else %}
-                <td>❌</td>
-                {% endif %}
-                <td><a href="{{ url_for('.edit_staff', id=staff.id) }}" class="button button-primary">Edit</a></td>
+            {% for r in res %}
+            <tr class="{{ r.fullname }}">
+                <td>{{ r.user_tag }}</td>
+                <td>{{ r.fullname }}</td>
+                <td>12</td>
+                <td>H</td>
+                <td>{{ r.joined_date }}</td>
+                <td>{{ r.email }}</td>
+                <td>{{ r.number }}</td>
+                <td>
+                    <a href="{{ url_for('.payments', id=r.id) }}" class="button">Payments</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <!-- <div class="paginate">
+    {#
+    <div class="paginate">
         {% if staffs.has_prev %}
         <a href="{{ url_for('.all_staff', page=staffs.prev_num) }}">Prev</a>
         {% else %} # {% endif %}
@@ -54,7 +61,8 @@
         {% if staffs.has_next %}
         <a href="{{ url_for('.all_staff', page=staffs.next_num) }}">Next</a>
         {% else %} # {% endif %}
-    </div>       -->
+    </div>      
+    #}
 </div>
 
 {% endblock %}

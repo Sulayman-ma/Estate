@@ -5,9 +5,7 @@ from estate.models import (
     User,
     Role,
     Payment,
-    Flat,
-    FlatType,
-    Block
+    FlatType
 )
 
 
@@ -16,4 +14,4 @@ app = create_app(Config)
 
 @app.shell_context_processor
 def context_processor():
-    return dict(db=db, Role=Role, Payment=Payment, User=User, Flat=Flat, FlatType=FlatType, Block=Block)
+    return dict(db=db, Role=Role, Payment=Payment, User=User, FlatType=FlatType)

@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Register Staff{% endblock %}
+{% block title %}Registration{% endblock %}
 
 {% block content %}
 
-<header>
-    {% include 'partials/admin_nav.html' %}
-</header>
-
 <div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
     <!-- MAIN CONTENT -->
-    <h2>Register Staff</h2>
+    <h2>Resident Registration</h2>
     <hr>
 
     <form method="POST">
@@ -24,11 +27,8 @@
         {% endfor %}
 
         <div class="row">
-            <div class="five columns">
+            <div class="ten columns">
                 {{ form.fullname(class='u-full-width') }}
-            </div>
-            <div class="five columns">
-                {{ form.email(class='u-full-width') }}
             </div>
         </div>
         <div class="row">
@@ -36,7 +36,7 @@
                 {{ form.number(class='u-full-width') }}
             </div>
             <div class="five columns">
-                {{ form.role() }}
+                {{ form.email(class='u-full-width') }}
             </div>
         </div>
         <div class="row">
@@ -48,11 +48,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="five columns">
-                Active
-                {{ form.is_active() }}
-            </div>
-            <div class="five columns">
+            <div class="ten columns">
                 {{ form.register(class='button-primary') }}
                 <input type="reset" value="Clear Form">
             </div>

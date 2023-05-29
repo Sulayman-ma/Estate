@@ -1,16 +1,13 @@
 <nav>
-    <div class="home">
+    <div class="u-pull-left">
         <a href="{{ url_for('main.index') }}"><img class="nav-icon" src="{{ url_for('static', filename='img/logo.png') }}"></a>
     </div>
-    <nav class="u-pull-right">
+    <div class="u-pull-right">
         <div>
             <li style="list-style: none;">
                 <a href="{{ url_for('main.index') }}">Home</a>
             </li>
-            <li style="list-style: none;">
-                <a href="{{ url_for('main.flats') }}">Flats</a>
-            </li>
-            {% if current_user.is_authenticated and not current_user.role.name == 'ADMIN' %}
+            {% if current_user.is_authenticated %}
             <li style="list-style: none;">
                 <a href="{{ url_for('main.profile') }}">Profile</a>
             </li>
@@ -19,9 +16,12 @@
             </li>
             {% else %}
             <li style="list-style: none;">
+                <a href="{{ url_for('main.flats') }}">Flats</a>
+            </li>
+            <li style="list-style: none;">
                 <a href="{{ url_for('main.login') }}">Login</a>
             </li>
             {% endif %}
         </div>
-    </nav>
+    </div>
 </nav>

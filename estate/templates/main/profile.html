@@ -18,7 +18,62 @@
     {% endfor %}
 
     <!-- MAIN CONTENT -->
-    
+    {# ONLY ALLOW AUTHENTICATED USERS #}
+    {% if current_user.is_authenticated and current_user.role_id == 1 %}
+    <h2>Resident Profile</h2> <hr>
+
+    <div class="row">
+        <div class="two columns">
+            <img src="{{ url_for('static', filename='img/profile-image.jpg') }}" class="u-max-full-width">
+        </div>
+        <div class="four columns">
+            <h5>Personal Info</h5>
+            <h6>{{ current_user.user_tag }}</h6>
+            <h6>{{ current_user.fullname }}</h6>
+        </div>
+        <div class="six columns">
+            <h5>Contact Info</h5>
+            <h6>{{ current_user.email }}</h6>
+            <h6>{{ current_user.number }}</h6>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="twelve columns">
+            <h5>Address</h5>
+            {% if current_user.flattype %}
+            Flat 23, Block G <br> Random Street.
+            {% else %}
+            User does not have an active lease, hence no address.
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <h5>Lease Details</h5>
+        {% if current_user.flattype %}
+        Flat Category - {{ current_user.flattype.name }} <br>
+        Rent Amount - {{ '₦{:,}'.format(current_user.flattype.rent) }} <br>
+        Lease Duration - {{ current_user.lease_duration }} <br>
+        Expirirng On - {{ current_user.lease_expiry }}
+        {% else %}
+        <p>User has no active lease. Kindly secure one to see lease details.</p>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <!-- show button to get the lease if none -->
+        {% if current_user.flat %}
+        <a class="button button-primary" href="{{ url_for('.make_payment')}}">Make Lease Payment Now</a>
+        {% endif %}
+    </div>
+    <hr>
+
+    {% endif %}
 </div>
 
 {% endblock %}

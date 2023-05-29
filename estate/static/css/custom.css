@@ -78,6 +78,35 @@ h3 {
     margin-top: 20px;
 }
 
+.vertical-line {
+    border-left: thin solid #000000;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(200, 200, 200);
+}
+
+.pay-border {
+    box-shadow: 8px 8px 16px 8px rgba(0,0,0,0.2);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pay-box {
+    padding:  3% 3% 0 3%;
+    margin-top: 10%;
+    width: 50%;
+}
+
+.pay-box .logo {
+    position: absolute;
+    top: 0;
+    /* left: 0; */
+    width: 20%;
+    padding: 2%;
+}
 
 
 

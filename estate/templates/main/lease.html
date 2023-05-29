@@ -44,12 +44,12 @@
     <form action="" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         Both parties acknowledge and agree to the terms of this Lease Agreement:
-        <div class="row u-pull-right">
-            <div class="twelve columns">
-                Tenant:
-                <input type="checkbox" name="" required id="">
-            </div>
-            <input type="submit" class="button-primary" value="PROCEED TO PAYMENT">
+        <div class="u-pull-right">
+            <label for="">
+                <input type="checkbox" name="" id="">
+                <span>Tenant</span>
+            </label>
+            <input type="submit" class="button-primary" value="AGREE TO TERMS & CONDITIONS">
         </div>
     </form>
 </div>

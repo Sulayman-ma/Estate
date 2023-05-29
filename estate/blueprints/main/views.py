@@ -1,9 +1,17 @@
 from . import main
-from ..admin.forms import Login
+from ... import db
+from .forms import (
+    RegisterResident, 
+    Login, 
+    Agree,
+    Pay
+)
+from ...decorators import role_required
 from flask_login import (
     login_required,
     logout_user,
-    login_user
+    login_user,
+    current_user
 )
 from flask import (
     render_template, 
@@ -17,10 +25,10 @@ from ...models import (
     User,
     Role,
     Payment,
-    FlatType,
-    Flat
+    FlatType
 )
-import secrets
+from wtforms.validators import ValidationError
+from datetime import datetime, timedelta
 
 
 
@@ -30,9 +38,9 @@ def index():
 
 
 @main.route('/profile')
-@login_required
+@role_required('RESIDENT')
 def profile():
-    return '<h2>Not Implemented</h2><p>Funcionality requires a prerequisite that is under development.</p>'
+    return render_template('main/profile.html')
 
 
 @main.route('/flats')
@@ -43,25 +51,83 @@ def flats():
 
 @main.route('/lease', methods=['GET', 'POST'])
 def lease():
-    # TODO: payment logic 
+    # agreeing to terms and conditions
     if request.method == 'POST':
-        return redirect(url_for('.pay_and_register')) 
+        return redirect(url_for('.register')) 
     return render_template('main/lease.html')
 
 
-@main.route('/pay_and_register')
-@login_required
-def pay_and_register():
+@main.route('/make_payment', methods=['GET', 'POST'])
+def make_payment():
+    flat_types = FlatType.query.all()
+    if request.method == 'POST':
+        category = request.form.get('flat_type')
+        flat_type = FlatType.query.filter_by(name=category).first()
+        # process payment
+        payment = Payment(
+            amount = flat_type.rent,
+            description = 'Resident {}, flat type {}'.format(current_user.user_tag, flat_type.name),
+            timestamp = datetime.now(),
+            user_id = current_user.id
+        )
+        db.session.add(payment)
+        # update resident info
+        lease_start = datetime.now()
+        lease_duration = int(request.form.get('lease_duration'))
+        current_user.lease_start = lease_start
+        current_user.lease_duration = lease_duration
+        current_user.lease_expiry = lease_start + timedelta(days=lease_duration*365)
+        current_user.flattype_id = flat_type.id
+
+        db.session.add(current_user)
+        db.session.commit()
+        flash('Payment successful.', 'success')
+        return redirect(url_for('.profile'))
+    return render_template('main/make_payment.html', flat_types=flat_types)
+
+
+@main.route('/register', methods=['GET', 'POST'])
+def register():
     """Register user and make payment. Redirected from .lease view"""
-    return '<h2>Not Implemented</h2><p>Funcionality requires a prerequisite that is under development.</p>'
+    form = RegisterResident()
+    if form.validate_on_submit():
+        try:
+            user = User(
+                fullname = form.fullname.data,
+                email = form.email.data,
+                number = form.number.data,
+                password = form.password.data,
+                # resident role is ID 1, no conflicts here
+                role = Role.query.get(1),
+                # account is only deactivated a certain time after lease is terminated
+                is_active = True
+            )
+            user.generate_user_tag()
+            db.session.add(user)
+            db.session.commit()
+            # after registeration, log them in and redirect to make payment
+            login_user(user)
+            return redirect(url_for('.make_payment'))
+        except ValidationError:
+            flash('Invalid input, please ensure passwords match and other data is valid.', 'error')
+        except:
+            flash('An unknown error has occured, please contact an admin.', 'error')
+    return render_template('main/register.html', form=form)
 
 
-@main.route('/login')
+@main.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('.profile'))
     form = Login()
     if form.validate_on_submit():
-        pass
-    return '<h2>Not Implemented</h2><p>Funcionality requires a prerequisite that is under development.</p>'
+        # login is only allowed with user tag
+        user = User.query.filter_by(user_tag=form.user_tag.data).first()
+        if user is not None and user.check_password(form.password.data):
+            login_user(user, remember=True)
+            return redirect(url_for('.profile'))
+        flash('Incorrect details.')
+    return render_template('main/login.html', form=form)
 
 
 @main.route('/logout')

@@ -17,7 +17,13 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128))
     number = db.Column(db.String(64))
     is_active = db.Column(db.BOOLEAN)
+    is_staff = db.Column(db.BOOLEAN, default=False)
     joined_date = db.Column(db.DateTime, default=datetime.now())
+    # lease duration in number of years
+    lease_duration = db.Column(db.Integer)
+    # expiry date is DateTime of datetime.now() + lease duration years
+    lease_expiry = db.Column(db.DateTime)
+    lease_start = db.Column(db.DateTime)
     
     @property
     def password(self):
@@ -28,9 +34,10 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     # relationships
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), name='fk_user_role_id')
     payments = db.relationship('Payment', backref='resident', lazy='dynamic')
-    flat = db.relationship('Flat', uselist=False, backref='resident')
+    # flat = db.relationship('Flat', uselist=False, backref='resident')
+    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_resident_flattype_id')
 
     # model methods
     def __init__(self, **kwargs):
@@ -43,15 +50,14 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def get_users(role: str) -> list:
-        """Returns a list of user query objects for a specific user role.
+        """Returns a query of user objects for a specific user role.
 
         :param role: User role."""
-        staff = []
-        # IDs by role
-        ids = {'staff': [2, 3], 'residents':[1],'agents':[2], 'cleaners':[3]}
-        for id in ids[role]:
-            staff.append(User.query.filter_by(role_id=id))
-        return staff
+        if role == 'staff':
+            return User.query.filter_by(is_staff=True)
+        ids = {'resident': 1, 'agent': 2, 'cleaner': 3}
+        return User.query.filter_by(role_id=ids[role])
+
 
     def generate_user_tag(self) -> None:
         """Generates a user's tag."""
@@ -103,8 +109,8 @@ class Payment(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.now())
 
     # relationships
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    flat_id = db.Column(db.Integer, db.ForeignKey('flats.id'), name='fk_payment_flat')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_payment_resident_id')
+    # flat_id = db.Column(db.Integer, db.ForeignKey('flats.id'), name='fk_payment_flat')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -127,7 +133,8 @@ class FlatType(db.Model):
     num_available = db.Column(db.Integer, default=total)
     
     # relationships
-    flats = db.relationship('Flat', backref='flattype', lazy='dynamic')
+    # flats = db.relationship('Flat', backref='flattype', lazy='dynamic')
+    residents = db.relationship('User', backref='flattype', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -136,39 +143,39 @@ class FlatType(db.Model):
         return '<{} - ₦{:,}>'.format(self.name, self.rent)
 
 
-class Flat(db.Model):
-    """Flat record per flat in every block in the estate."""
-    __tablename__ = 'flats'
+# class Flat(db.Model):
+#     """Flat record per flat in every block in the estate."""
+#     __tablename__ = 'flats'
 
-    id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.Integer)
-    # block = db.Column(db.CHAR)
+#     id = db.Column(db.Integer, primary_key=True)
+#     number = db.Column(db.Integer)
+#     # block = db.Column(db.CHAR)
 
-    # relationships
-    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_flat_flattype')
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_flat_resident')
-    payment = db.relationship('Payment', backref='flat', uselist=False)
-    block_id = db.Column(db.Integer, db.ForeignKey('blocks.id', name='fk_flat_block'))
+#     # relationships
+#     flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_flat_flattype')
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_flat_resident')
+#     payment = db.relationship('Payment', backref='flat', uselist=False)
+#     block_id = db.Column(db.Integer, db.ForeignKey('blocks.id', name='fk_flat_block'))
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
 
-    def __repr__(self):
-        return '<Flat {}, Block {}>'.format(self.number, self.block_id)
+#     def __repr__(self):
+#         return '<Flat {}, Block {}>'.format(self.number, self.block_id)
 
     
-class Block(db.Model):
-    """Block model. To be managed only on the admin side and used for tracking and any necessary features and grouping of flats."""  
-    __tablename__ = 'blocks'
+# class Block(db.Model):
+#     """Block model. To be managed only on the admin side and used for tracking and any necessary features and grouping of flats."""  
+#     __tablename__ = 'blocks'
 
-    id = db.Column(db.Integer, primary_key=True)
-    letter = db.Column(db.CHAR)
+#     id = db.Column(db.Integer, primary_key=True)
+#     letter = db.Column(db.CHAR)
 
-    # relationships
-    flats = db.relationship('Flat', backref='block', lazy='dynamic')
+#     # relationships
+#     # flats = db.relationship('Flat', backref='block', lazy='dynamic')
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
     
-    def __repr__(self):
-        return '<Block {}>'.format(self.letter)
+#     def __repr__(self):
+#         return '<Block {}>'.format(self.letter)
