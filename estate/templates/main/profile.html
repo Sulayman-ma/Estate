@@ -61,7 +61,7 @@
         Lease Duration - {{ current_user.lease_duration }} year(s)<br>
         Expirirng On - {{ current_user.lease_expiry.strftime('%Y %B, %d') }}
         <div>
-            <a href="{{ url_for('.renew_payment') }}" class="button button-primary">Renew Payment</a>
+            <a href="{{ url_for('.make_payment') }}" class="button button-primary">Renew Payment</a>
         </div>
         {% else %}
         <p>User has no active lease. Kindly secure one to see lease details.</p>
