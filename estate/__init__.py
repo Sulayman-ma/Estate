@@ -14,12 +14,12 @@ from flask_principal import Principal
 
 
 login_manager = LoginManager()
-# login_manager.login_view = 'admin.login'
+login_manager.login_view = 'login'
 # use in case of login with multiple blueprints
-login_manager.blueprint_login_views = {
-    'main': '/login',
-    'admin': '/admin/login'
-}
+# login_manager.blueprint_login_views = {
+#     'main': '/login',
+#     'admin': '/admin/login'
+# }
 db = SQLAlchemy()
 csrf = CSRFProtect()
 migrate = Migrate()

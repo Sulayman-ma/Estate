@@ -44,23 +44,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="five columns">
-                <label for="">Password</label>
-                {{ form.password(class='u-full-width') }}
-            </div>
-            <div class="five columns">
-                <label for="">Confirm Password</label>
-                {{ form.password2(class='u-full-width') }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="five columns">
-                <label for="">
-                    {{ form.is_active() }}
-                    <span>Active</span>
-                </label>
-            </div>
-            <div class="five columns">
+            <div class="six columns u-pull-right">
                 {{ form.register(class='button-primary') }}
                 <input type="reset" value="Clear Form">
             </div>

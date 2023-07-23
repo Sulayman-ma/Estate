@@ -5,7 +5,7 @@ from . import db, login_manager
 
 
 
-class User(UserMixin, db.Model):
+class User(db.Model, UserMixin):
     """User model for all application users."""
     __tablename__ = 'users'
 
@@ -15,14 +15,14 @@ class User(UserMixin, db.Model):
     fullname = db.Column(db.String(128))
     email = db.Column(db.String(128))
     number = db.Column(db.String(64))
-    is_active = db.Column(db.BOOLEAN)
-    is_staff = db.Column(db.BOOLEAN, default=False)
+    is_active = db.Column(db.BOOLEAN, default=True)
+    # is_staff = db.Column(db.BOOLEAN, default=False)
     joined_date = db.Column(db.DateTime, default=datetime.now())
     # outstanding fees
     outstanding_rent = db.Column(db.Integer, default=0)
     outstanding_service_charge = db.Column(db.Integer, default=0)
     # lease duration in number of years
-    lease_duration = db.Column(db.Integer)
+    lease_duration = db.Column(db.Integer, default=1)
     # expiry date is DateTime of datetime.now() + lease duration years
     lease_start = db.Column(db.DateTime)
     lease_expiry = db.Column(db.DateTime)
@@ -52,7 +52,14 @@ class User(UserMixin, db.Model):
 
     def get_users(role: str) -> db.Query:
         """Returns a joint query of users given the role; staff for all managers and handymen, tenants, managers and handymen."""
-        
+        categs = {'handyman': 4, 'manager': 2, 'tenant': 3}
+        if role == 'staff':
+            managers = User.query.filter_by(role_id=2)
+            handymen = User.query.filter_by(role_id=4)
+            staff = managers.union(handymen)
+            return staff
+        return User.query.filter_by(role_id=categs[role])
+
 
     def generate_user_tag(self) -> None:
         """Generates a user's tag. For admin and residents only."""
@@ -64,7 +71,6 @@ class User(UserMixin, db.Model):
             hash = generate_password_hash(email_user)[-5:]
             tag = prefix + hash
             self.user_tag = tag.lower()
-            return
 
 
 @login_manager.user_loader
@@ -95,7 +101,6 @@ class Role(db.Model):
             rl = Role(name=role)
             db.session.add(rl)
         db.session.commit()
-        return
 
 
 class Payment(db.Model):
@@ -159,3 +164,14 @@ class Flat(db.Model):
 
     def __repr__(self) -> str:
         return '<Flat {}, Block {}>'.format(self.number, self.block)
+
+    def populate_flats(block: str, type_id: int, count: int) -> None:
+        """Use to populate flats table records with all estate flats.
+
+        :param block: Block letter
+        :param type_id: The FlatType to be set
+        :param count: The total number of flats for the block"""
+        for i in range(1, count+1):
+            flat = Flat(number=i, block=block, flattype_id=type_id)
+            db.session.add(flat)
+        db.session.commit()

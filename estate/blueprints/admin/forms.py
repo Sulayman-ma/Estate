@@ -17,8 +17,9 @@ class RegisterStaff(FlaskForm):
         'required': 'required',
     })
     email = EmailField(label="E-mail", render_kw={
-        'placeholder': 'Email', 'required': 'required',
-        }, validators=[Email()])
+        'placeholder': 'Email', 
+        'required': 'required',
+    }, validators=[Email()])
     number = TelField(label="Number", render_kw={
         'placeholder': 'Number',
         'required': 'required',
@@ -34,12 +35,15 @@ class EditStaffInfo(FlaskForm):
     fullname = StringField(label="Full Name", render_kw={
         'placeholder': 'Full Name'
     })
-    email = EmailField(label="E-mail", render_kw={'placeholder': 'Email'})
+    email = EmailField(label="E-mail", render_kw={
+        'placeholder': 'Email'
+    })
     number = TelField(label="Number", render_kw={
         'placeholder': 'Number'
     })
     role = SelectField(label="Role", choices=[
         'HANDYMAN', 'MANAGER'
-    ], render_kw = {'disabled': 'disabled'})
+        ], render_kw = {'disabled': 'disabled'}
+    )
     is_active = BooleanField()
     save = SubmitField(label='Save Changes')

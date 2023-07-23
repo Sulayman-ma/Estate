@@ -119,12 +119,7 @@ tr:nth-child(even) {
 nav {
     background-color: rgb(104, 104, 104);
     overflow: hidden;
-}
-
-nav div {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
 }
 
 nav div li { float: left; }

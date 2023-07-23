@@ -1,10 +1,3 @@
-from flask import (
-    render_template, 
-    request,
-    redirect,
-    url_for,
-    flash
-)
 from flask_login import login_user
 from estate import create_app
 from config import Config
@@ -16,6 +9,14 @@ from estate.models import (
     Flat,
     FlatType
 )
+from flask import (
+    render_template, 
+    request,
+    redirect,
+    url_for,
+    flash
+)
+from datetime import timedelta
 
 
 
@@ -25,15 +26,15 @@ app = create_app(Config)
 def login():
     """The login view is here in an attempt to use it for all users and redirect to the appropriate blueprint."""
     if request.method == 'POST':
-        user_id = request.form.get('user_id')
+        user_tag = request.form.get('user_tag')
         password = request.form.get('password')
-        user = User.query.filter_by(user_tag=user_id).first()
+        user = User.query.filter_by(user_tag=user_tag).first()
         if user is not None and user.check_password(password):
-            login_user(user)
-            if user.role_id == 1:
+            login_user(user, remember=True, duration=timedelta(hours=1))
+            next = request.args.get('next')
+            if user_tag.startswith('a'):
                 return redirect(url_for('admin.dash'))
             else:
-                next = request.args.get('next')
                 if next is None or not next.startswith('/'):
                     next = url_for('main.index')
                 return redirect(next)
