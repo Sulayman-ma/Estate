@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Login{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 
@@ -9,7 +9,7 @@
     <hr>
 
     <form method="post">
-       {{ form.hidden_tag() }}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
        <!-- FLASH MESSAGES -->
         {% for category, msg in get_flashed_messages(with_categories=True) %}
@@ -20,17 +20,17 @@
 
         <div class="row">
             <div class="column">
-                {{ form.user_tag.label }}
-                {{ form.user_tag() }}
+                <label for="">User ID</label>
+                <input type="text" name="user_id" required placeholder="User ID">
             </div>
         </div>
         <div class="row">
             <div class="column">
-                {{ form.password.label }}
-                {{ form.password() }}
+                <label for="">Password</label>
+                <input type="password" name="password" required placeholder="Password">
             </div>
         </div>
-        {{ form.login() }}
+        <input type="submit" value="Login">
     </form>
 </div>
 

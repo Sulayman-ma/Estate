@@ -9,7 +9,6 @@ class User(UserMixin, db.Model):
     """User model for all application users."""
     __tablename__ = 'users'
 
-    # properties
     id = db.Column(db.Integer, primary_key=True)
     user_tag = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(128))
@@ -19,55 +18,52 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.BOOLEAN)
     is_staff = db.Column(db.BOOLEAN, default=False)
     joined_date = db.Column(db.DateTime, default=datetime.now())
+    # outstanding fees
+    outstanding_rent = db.Column(db.Integer, default=0)
+    outstanding_service_charge = db.Column(db.Integer, default=0)
     # lease duration in number of years
     lease_duration = db.Column(db.Integer)
     # expiry date is DateTime of datetime.now() + lease duration years
-    lease_expiry = db.Column(db.DateTime)
     lease_start = db.Column(db.DateTime)
+    lease_expiry = db.Column(db.DateTime)
     
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def __repr__(self) -> str:
+        return '<User {}, since {}>'.format(self.user_tag, self.joined_date)
+
+    """PASSWORD METHODS AND VERIFICATION"""
     @property
-    def password(self):
+    def password(self) -> AttributeError:
         raise AttributeError('PROPERTY NOT ACCESSIBLE')
 
     @password.setter
-    def password(self, password):
+    def password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password)
-
-    # relationships
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), name='fk_user_role_id')
-    payments = db.relationship('Payment', backref='resident', lazy='dynamic')
-    # flat = db.relationship('Flat', uselist=False, backref='resident')
-    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_resident_flattype_id')
-
-    # model methods
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def __repr__(self):
-        return '<User {}, since {}>'.format(self.user_tag, self.joined_date)
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
 
-    def get_users(role: str) -> list:
-        """Returns a query of user objects for a specific user role.
+    """RELATIONSHIPS"""
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), name='fk_user_role_id')
+    payments = db.relationship('Payment', backref='tenant', lazy='dynamic')
+    flat = db.relationship('Flat', uselist=False, backref='tenant')
 
-        :param role: User role."""
-        if role == 'staff':
-            return User.query.filter_by(is_staff=True)
-        ids = {'resident': 1, 'agent': 2, 'cleaner': 3, 'manager': 5}
-        return User.query.filter_by(role_id=ids[role])
-
+    def get_users(role: str) -> db.Query:
+        """Returns a joint query of users given the role; staff for all managers and handymen, tenants, managers and handymen."""
+        
 
     def generate_user_tag(self) -> None:
-        """Generates a user's tag."""
-        # if user has no tag, generate one.
+        """Generates a user's tag. For admin and residents only."""
         if self.user_tag is None:
+            # using first letter of role name
             prefix = self.role.name[0]
+            # hash part of email and use part of hash
             email_user = self.email.split('@')[0]
             hash = generate_password_hash(email_user)[-5:]
             tag = prefix + hash
-            self.user_tag = tag.upper()
+            self.user_tag = tag.lower()
             return
 
 
@@ -77,23 +73,24 @@ def load_user(user_id):
 
 
 class Role(db.Model):
+    """User roles, including the tenants, managers, handymen and admin."""
     __tablename__ = 'roles'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     
-    # relationships
+    """RELATIONSHIPS"""
     users = db.relationship('User', backref='role', lazy='dynamic')
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<Role {} - {}>'.format(self.id, self.name)
 
     def create_roles() -> None:
-        # run once as needed and never again
-        roles = ['RESIDENT', 'AGENT', 'CLEANER', 'ADMIN']
+        # run once upon database intiation
+        roles = ['ADMIN', 'MANAGER', 'TENANT', 'HANDYMAN']
         for role in roles:
             rl = Role(name=role)
             db.session.add(rl)
@@ -106,88 +103,59 @@ class Payment(db.Model):
     __tablename__ = 'payments'
 
     id = db.Column(db.Integer, primary_key=True)
+    # service charge or rent
+    type = db.Column(db.String(64))
     amount = db.Column(db.Integer)
+    # Zayyad insists we leave this
     description = db.Column(db.String(128))
+    # year corresponding to payment
+    year = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.now())
 
-    # relationships
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_payment_resident_id')
-    # flat_id = db.Column(db.Integer, db.ForeignKey('flats.id'), name='fk_payment_flat')
+    """RELATIONSHIPS"""
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_payment_tenant_id')
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<Payment {} - {}>'.format(self.user_id, self.timestamp)
 
 
 class FlatType(db.Model):
-    """Flat types model with flat description, specifics and rent amount."""
-    __tablename__ = 'flattypes'
+    """Flat type for 2 or 3 bedroom"""
+    __tablename__ = "flattypes"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    description = db.Column(db.Text())
-    rent = db.Column(db.Integer)
     bedrooms = db.Column(db.Integer)
-    bathrooms = db.Column(db.Integer, default=bedrooms)
-    # total = db.Column(db.Integer)
-    num_available = db.Column(db.Integer)
-    is_available = db.Column(db.BOOLEAN, default=True)
-    
-    # relationships
-    # flats = db.relationship('Flat', backref='flattype', lazy='dynamic')
-    residents = db.relationship('User', backref='flattype', lazy='dynamic')
+    rent = db.Column(db.Integer)
+    service_charge = db.Column(db.Integer)
 
-    def __init__(self, **kwargs):
+    """RELATIONSHIPS"""
+    flats = db.relationship('Flat', backref='type', lazy='dynamic')
+
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-    def __repr__(self):
-        return '<{} - ₦{:,}>'.format(self.name, self.rent)
-
-    def update_status(self):
-        """Updates number of available flats left for category and availability status."""
-        if self.num_available < 1:
-            self.is_available = False
-            return
-        self.is_available = True
-        return
-        
+    def __repr__(self) -> str:
+        return '<FlatType #{}, {} bedrooms>'.format(self.id, self.bedrooms)
 
 
-# class Flat(db.Model):
-#     """Flat record per flat in every block in the estate."""
-#     __tablename__ = 'flats'
+class Flat(db.Model):
+    """Flat record per flat in every block in the estate."""
+    __tablename__ = 'flats'
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     number = db.Column(db.Integer)
-#     # block = db.Column(db.CHAR)
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer)
+    # blocks lettered A - D
+    block = db.Column(db.CHAR)
 
-#     # relationships
-#     flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_flat_flattype')
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_flat_resident')
-#     payment = db.relationship('Payment', backref='flat', uselist=False)
-#     block_id = db.Column(db.Integer, db.ForeignKey('blocks.id', name='fk_flat_block'))
+    """RELATIONSHIPS"""
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_user_flat_id')
+    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_flat_type_id')
 
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
 
-#     def __repr__(self):
-#         return '<Flat {}, Block {}>'.format(self.number, self.block_id)
-
-    
-# class Block(db.Model):
-#     """Block model. To be managed only on the admin side and used for tracking and any necessary features and grouping of flats."""  
-#     __tablename__ = 'blocks'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     letter = db.Column(db.CHAR)
-
-#     # relationships
-#     # flats = db.relationship('Flat', backref='block', lazy='dynamic')
-
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-    
-#     def __repr__(self):
-#         return '<Block {}>'.format(self.letter)
+    def __repr__(self) -> str:
+        return '<Flat {}, Block {}>'.format(self.number, self.block)

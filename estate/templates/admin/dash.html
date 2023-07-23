@@ -23,37 +23,21 @@
                 <!-- <span>Active Agents</span> -->
                 <thead>
                     <tr>
-                        <th>Agent ID</th>
+                        <th>Staff ID</th>
                         <th>Name</th>
                         <th>Is Active</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for agent in agents %}
                     <tr>
-                        <td>{{ agent.user_tag }}</td>
-                        <td>{{ agent.fullname }}</td>
-                        {% if agent.is_active %}
-                        <td>✔</td>
-                        {% else %}
-                        <td>❌</td>
-                        {% endif %}
+                        
                     </tr>
-                    {% endfor %}
                 </tbody>
             </table>
-            <!-- <div class="u-pull-right">
-                <a href="{{ url_for('.all_staff') }}">View all staff...</a>
-            </div> -->
         </div>
         <div class="six columns">
             <div class="stats shadow-div">
-                <span>Platform Statistics</span>
-                <h5>Residents: {{ residents.count() }}</h5>
-                <h5>Total staff: {{ total_staff }}</h5>
-                <h6>Managers: {{ managers }}</h6>
-                <h6>Agents: {{ agents.count() }}</h6>
-                <h6>Cleaners: {{ cleaners }}</h6>
+                <span>Estate Statistics</span>
             </div>
         </div>
     </div>

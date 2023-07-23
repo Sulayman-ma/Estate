@@ -36,20 +36,6 @@ class RegisterResident(FlaskForm):
     register = SubmitField(label='Register')
 
 
-class Login(FlaskForm):
-    user_tag = StringField(label="Resident ID", render_kw={
-        'placeholder': 'Resident ID',
-        'required': 'required',
-    })
-    password = PasswordField(label="Password", render_kw={
-        'placeholder': 'Password',
-        'required': 'required',
-    })
-    login = SubmitField(label='Login', render_kw={
-        'class': 'button-primary'
-    })
-
-
 class Agree(FlaskForm):
     check = BooleanField()
     proceed = SubmitField(label='AGREE TO TERMS & CONDITIONS', render_kw={

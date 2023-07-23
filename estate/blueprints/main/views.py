@@ -1,10 +1,7 @@
 from . import main
 from ... import db
 from .forms import (
-    RegisterResident, 
-    Login, 
-    Agree,
-    Pay
+    RegisterResident
 )
 from ...decorators import role_required
 from flask_login import (
@@ -18,16 +15,15 @@ from flask import (
     redirect,
     url_for,
     flash,
-    request,
-    current_app
+    request
 )
 from ...models import (
     User,
     Role,
     Payment,
+    Flat,
     FlatType
 )
-from wtforms.validators import ValidationError
 from datetime import datetime, timedelta
 
 
@@ -38,15 +34,15 @@ def index():
 
 
 @main.route('/profile')
-@role_required('RESIDENT')
+# @role_required('TENANT')
 def profile():
     return render_template('main/profile.html')
 
 
-@main.route('/flats')
-def flats():
-    types = FlatType.query.all()
-    return render_template('main/flats.html', types=types)
+# @main.route('/flats')
+# def flats():
+#     types = FlatType.query.all()
+#     return render_template('main/flats.html', types=types)
 
 
 @main.route('/lease', methods=['GET', 'POST'])
@@ -127,23 +123,23 @@ def register():
     return render_template('main/register.html', form=form)
 
 
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('.profile'))
-    form = Login()
-    if form.validate_on_submit():
-        # login is only allowed with user tag
-        user = User.query.filter_by(user_tag=form.user_tag.data).first()
-        if user is not None and user.check_password(form.password.data):
-            login_user(user, remember=True)
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('.profile')
-            return redirect(next)
-            # return redirect(url_for('.profile'))
-        flash('⚠ Incorrect details, ensure to use upper case for ID', 'error')
-    return render_template('main/login.html', form=form)
+# @main.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('.profile'))
+#     form = Login()
+#     if form.validate_on_submit():
+#         # login is only allowed with user tag
+#         user = User.query.filter_by(user_tag=form.user_tag.data).first()
+#         if user is not None and user.check_password(form.password.data):
+#             login_user(user, remember=True)
+#             next = request.args.get('next')
+#             if next is None or not next.startswith('/'):
+#                 next = url_for('.profile')
+#             return redirect(next)
+#             # return redirect(url_for('.profile'))
+#         flash('⚠ Incorrect details, ensure to use upper case for ID', 'error')
+#     return render_template('main/login.html', form=form)
 
 
 @main.route('/logout')
