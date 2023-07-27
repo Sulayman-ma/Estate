@@ -1,20 +1,17 @@
 from . import admin
 from ... import db
+from ...decorators import admin_required
 from ...models import (
     User,
     Role,
-    Payment,
-    FlatType,
-    Flat
+    Payment
 )
-from ...decorators import admin_required
 from .forms import (
     RegisterStaff,
     EditStaffInfo
 )
 from flask import (
     render_template,
-    request,
     redirect,
     url_for,
     flash
@@ -47,6 +44,7 @@ def all_staff():
 def register_staff():
     form = RegisterStaff()
     if form.validate_on_submit():
+        # create user, generate tag and add to database
         role = Role.query.filter_by(name=form.role.data).first()
         staff = User(
             fullname = form.fullname.data,
@@ -57,6 +55,7 @@ def register_staff():
         staff.generate_user_tag()
         db.session.add(staff)
         db.session.commit()
+        flash('Staff member added ✔', 'success')
         return redirect(url_for('.all_staff'))
     return render_template('admin/register_staff.html', form=form)
 
@@ -67,7 +66,17 @@ def register_staff():
 def edit_staff(id):
     """All editing of staff info and changing of their active status"""
     user = User.query.get(id)
-    form = EditStaffInfo(user=user)
+    # fill form with current user data by passing `obj` parameter
+    form = EditStaffInfo(obj=user)
+    if form.is_submitted():
+        # apply changes made to user model
+        user.fullname = form.fullname.data
+        user.email = form.email.data
+        user.number = form.number.data
+        user.is_active = form.is_active.data
+        db.session.commit()
+        flash('Changes applied ✔', 'success')
+        return redirect(url_for('.all_staff'))
     return render_template('admin/edit_staff.html', form=form)
 
 
@@ -75,7 +84,11 @@ def edit_staff(id):
 @login_required
 @admin_required
 def payments():
-    return render_template('admin/payments.html')
+    payments = Payment.query.all()
+    # TODO: paginate the payments
+
+    # TODO: provide filters for search by; user, 
+    return render_template('admin/payments.html', payments=payments)
 
 
 @admin.route('/admin/logout')

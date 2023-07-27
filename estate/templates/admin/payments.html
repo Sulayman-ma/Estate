@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Payments{% endblock %}
+
+{% block content %}
+
+<header>
+    {% include 'partials/admin_nav.html' %}
+</header>
+
+<div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <h2>Payment Records</h2>
+
+    <table class="u-full-width staff">
+        <thead>
+            <tr>
+                <th>Payment Type</th>
+                <th>User Tag</th>
+                <th>Year</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for payment in payments %}
+                <td>{{ payment.type }}</td>
+                <td>{{ payment.user_tag }}</td>
+                <td>{{ payment.year }}</td>
+                <td>{{ payment.amount }}</td>
+                <td>{{ payment.timestamp }}</td>
+                <td>{{ payment.status }}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

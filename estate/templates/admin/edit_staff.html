@@ -10,19 +10,11 @@
 
 <div class="container">
     <!-- MAIN CONTENT -->
-    <h2>Register Staff</h2>
+    <h2>Edit Staff</h2>
     <hr>
 
     <form method="POST">
         {{ form.hidden_tag() }}
-        <!-- {{ form.csrf_token }} -->
-
-       <!-- FLASH MESSAGES -->
-        {% for category, msg in get_flashed_messages(with_categories=True) %}
-        <div class="flash">
-            <span class="{{ category }}">{{ msg }}</span>
-        </div>
-        {% endfor %}
 
         <div class="row">
             <div class="five columns">
@@ -46,7 +38,7 @@
         </div>
         <div class="row">
             <div class="five columns">
-                <label for="">
+                <label>
                     {{ form.is_active() }}
                     <span>Active</span>
                 </label>

@@ -46,7 +46,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     """RELATIONSHIPS"""
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), name='fk_user_role_id')
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id', name='fk_user_role_id'))
     payments = db.relationship('Payment', backref='tenant', lazy='dynamic')
     flat = db.relationship('Flat', uselist=False, backref='tenant')
 
@@ -59,7 +59,6 @@ class User(db.Model, UserMixin):
             staff = managers.union(handymen)
             return staff
         return User.query.filter_by(role_id=categs[role])
-
 
     def generate_user_tag(self) -> None:
         """Generates a user's tag. For admin and residents only."""
@@ -111,14 +110,14 @@ class Payment(db.Model):
     # service charge or rent
     type = db.Column(db.String(64))
     amount = db.Column(db.Integer)
-    # Zayyad insists we leave this
-    description = db.Column(db.String(128))
+    # status; full or partial payment
+    status = db.Column(db.String(128))
     # year corresponding to payment
     year = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.now())
 
     """RELATIONSHIPS"""
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_payment_tenant_id')
+    user_tag = db.Column(db.Integer, db.ForeignKey('users.user_tag', name='fk_payment_tenant_tag'))
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -156,8 +155,8 @@ class Flat(db.Model):
     block = db.Column(db.CHAR)
 
     """RELATIONSHIPS"""
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_user_flat_id')
-    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id'), name='fk_flat_type_id')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_user_flat_id'))
+    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id', name='fk_flat_type_id'))
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)

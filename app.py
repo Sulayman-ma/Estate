@@ -32,6 +32,7 @@ def login():
         if user is not None and user.check_password(password):
             login_user(user, remember=True, duration=timedelta(hours=1))
             next = request.args.get('next')
+            # detect admin user tag
             if user_tag.startswith('a'):
                 return redirect(url_for('admin.dash'))
             else:
