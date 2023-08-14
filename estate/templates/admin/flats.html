@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Flats{% endblock %}
+
+{% block content %}
+
+<header>
+    {% include 'partials/admin_nav.html' %}
+</header>
+
+<div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <h2>Estate Flats</h2>
+
+    <table class="u-full-width staff">
+        <thead>
+            <tr>
+                <th>Block</th>
+                <th>Flat</th>
+                <th>Owner (Tag)</th>
+                <th>Tenant (Tag)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flat in flats %}
+            <tr>
+                <td>{{ flat.block }}</td>
+                <td>{{ flat.number }}</td>
+                <td>O1234SD</td>
+                <td>T1234SD</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

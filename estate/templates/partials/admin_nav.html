@@ -1,10 +1,10 @@
 <nav>
     <div class="u-pull-left">
-        <a href="{{ url_for('admin.dash') }}"></a>
+        <a href="{{ url_for('admin.index') }}"></a>
     </div>
     <div class="u-pull-right">
         <li style="list-style: none;">
-            <a href="{{ url_for('admin.dash') }}">Dashboard</a>
+            <a href="{{ url_for('admin.index') }}">Dashboard</a>
         </li>
         <li class="dropdown">
             <a class="dropbtn">Staff &downarrow;</a>
@@ -12,10 +12,21 @@
                 <li><a href="{{ url_for('.all_staff') }}">All Staff</a></li>
                 <li><a href="{{ url_for('.register_staff') }}">Register Staff</a></li>
             </ul>
+        </li> 
+        <li class="dropdown">
+            <a class="dropbtn">Users &downarrow;</a>
+            <ul class="dropdown-content">
+                <li><a href="{{ url_for('admin.owners') }}">Owners</a></li>
+                <li><a href="{{ url_for('admin.tenants') }}">Tenants</a></li>
+                <li><a href="{{ url_for('admin.create_user') }}">Create User</a></li>
+            </ul>
         </li>
         <li style="list-style: none;">
             <a href="{{ url_for('admin.payments') }}">Payment History</a>
         </li>
+        <!-- <li style="list-style: none;">
+            <a href="{{ url_for('admin.flats') }}">Estate Flats</a>
+        </li> -->
         <li style="list-style: none;">
             <a href="{{ url_for('admin.logout') }}">Logout</a>
         </li>

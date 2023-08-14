@@ -16,24 +16,43 @@
     <form method="POST">
         {{ form.hidden_tag() }}
 
+        <!-- FLASH MESSAGES -->
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
+        <div class="flash">
+            <span class="{{ category }}">{{ msg }}</span>
+        </div>
+        {% endfor %}
+
         <div class="row">
-            <div class="five columns">
-                {{ form.fullname.label }}
-                {{ form.fullname() }}
+            <div class="four columns">
+                {{ form.first_name.label }}
+                {{ form.first_name(class='u-full-width') }}
             </div>
-            <div class="five columns">
-                {{ form.email.label }}
-                {{ form.email() }}
+            <div class="four columns">
+                {{ form.middle_name.label }}
+                {{ form.middle_name(class='u-full-width') }}
+            </div>
+            <div class="four columns">
+                {{ form.last_name.label }}
+                {{ form.last_name(class='u-full-width') }}
             </div>
         </div>
         <div class="row">
-            <div class="five columns">
-                {{ form.number.label }}
-                {{ form.number() }}
+            <div class="three columns">
+                {{ form.email.label }}
+                {{ form.email(class='u-full-width') }}
             </div>
-            <div class="five columns">
+            <div class="three columns">
+                {{ form.user_tag.label }}
+                {{ form.user_tag(class='u-full-width') }}
+            </div>
+            <div class="three columns">
+                {{ form.number.label }}
+                {{ form.number(class='u-full-width') }}
+            </div>
+            <div class="three columns">
                 {{ form.role.label }}
-                {{ form.role() }}
+                {{ form.role(class='u-full-width') }}
             </div>
         </div>
         <div class="row">

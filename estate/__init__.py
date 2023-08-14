@@ -17,7 +17,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 # use in case of login with multiple blueprints
 # login_manager.blueprint_login_views = {
-#     'main': '/login',
+#     'tenant': '/login',
 #     'admin': '/admin/login'
 # }
 db = SQLAlchemy()
@@ -40,10 +40,10 @@ def create_app(config_object):
     principal.init_app(app)
 
     # blueprints
-    from .blueprints.main import main
+    from .blueprints.tenant import tenant
     from .blueprints.admin import admin
 
     app.register_blueprint(admin)
-    app.register_blueprint(main)
+    app.register_blueprint(tenant)
 
     return app

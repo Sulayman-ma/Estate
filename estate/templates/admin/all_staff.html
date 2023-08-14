@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}All Staff{% endblock %}
+
 {% block content %}
 
 <header>
@@ -31,10 +33,10 @@
         </thead>
         <tbody>
             {% for st in staff %}
-            <tr class="{{ staff.fullname }}">
+            <tr class="{{st.first_name}}{{st.last_name}}{{st.middle_name}}">
                 <td>{{ st.user_tag }}</td>
-                <td>{{ st.role.name }}</td>
-                <td>{{ st.fullname }}</td>
+                <td>{{ st.role }}</td>
+                <td>{{ st.first_name }} {{ st.middle_name }} {{ st.last_name }}</td>
                 {% if st.is_active %}
                 <td>✔</td>
                 {% else %}

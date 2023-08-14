@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Register Staff{% endblock %}
+{% block title %}Create User{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 
 <div class="container">
     <!-- MAIN CONTENT -->
-    <h2>Register Staff</h2>
+    <h2>Create User</h2>
     <hr>
 
     <form method="POST">
@@ -25,26 +25,12 @@
 
         <div class="row">
             <div class="four columns">
-                {{ form.first_name.label }}
-                {{ form.first_name(class='u-full-width') }}
-            </div>
-            <div class="four columns">
-                {{ form.middle_name.label }}
-                {{ form.middle_name(class='u-full-width') }}
-            </div>
-            <div class="four columns">
-                {{ form.last_name.label }}
-                {{ form.last_name(class='u-full-width') }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="four columns">
                 {{ form.email.label }}
                 {{ form.email(class='u-full-width') }}
             </div>
             <div class="four columns">
-                {{ form.number.label }}
-                {{ form.number(class='u-full-width') }}
+                {{ form.password.label }}
+                {{ form.password(class='u-full-width') }}
             </div>
             <div class="four columns">
                 {{ form.role.label }}

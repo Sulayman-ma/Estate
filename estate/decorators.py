@@ -13,7 +13,7 @@ def admin_required(f):
             # redirect unauthenticated users
             if not current_user.is_authenticated:
                 return current_app.login_manager.unauthorized()
-            if current_user.role_id != 1 or not current_user.user_tag.startswith('a'):
+            if current_user.role != 'ADMIN' or not current_user.user_tag.startswith('a'):
                 abort(403)
             return f(*args, **kwargs)
         return decorated_function

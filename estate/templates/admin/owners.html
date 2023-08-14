@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Owners{% endblock %}
+
+{% block content %}
+
+<header>
+    {% include 'partials/admin_nav.html' %}
+</header>
+
+<div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <div class="search-div">
+        <input type="text" onkeyup="search()" placeholder="Search for tenant by name" id="searchBtn">
+    </div>
+
+    <table class="u-full-width staff">
+        <caption>Flat Owners</caption>
+        <thead>
+            <tr>
+                <th>User Tag</th>
+                <th>Name</th>
+                <th>Flats Owned</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in owners %}
+            <tr class="{{t.first_name}}{{t.last_name}}{{t.middle_name}}">
+                <td>{{ t.user_tag }}</td>
+                <td>{{ t.first_name }} {{ t.middle_name }} {{ t.last_name }}</td>
+                <!-- print separated in case of multiple or use select -->
+                <td>
+                <select class="u-full-width">
+                {% for flat in t.flats.all() %}
+                    <option>Block {{ flat.block }}, Flat {{ flat.number }}</option>
+                {% endfor %}
+                </select>
+                </td>
+                <td><a href="#" class="button button-primary">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

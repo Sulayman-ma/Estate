@@ -6,18 +6,25 @@ from . import db, login_manager
 
 
 class User(db.Model, UserMixin):
-    """User model for all application users."""
+    """Base user model for appliactiion."""
     __tablename__ = 'users'
-
     id = db.Column(db.Integer, primary_key=True)
+
     user_tag = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(128))
-    fullname = db.Column(db.String(128))
-    email = db.Column(db.String(128))
+    first_name = db.Column(db.String(128))
+    middle_name = db.Column(db.String(128))
+    last_name = db.Column(db.String(128))
+    gender = db.Column(db.String(32))
+    role = db.Column(db.String(32))
+    email = db.Column(db.String(128), unique=True)
     number = db.Column(db.String(64))
     is_active = db.Column(db.BOOLEAN, default=True)
-    # is_staff = db.Column(db.BOOLEAN, default=False)
     joined_date = db.Column(db.DateTime, default=datetime.now())
+    is_staff = db.Column(db.BOOLEAN, default=False)
+    # `is_new` boolean will reset to False after the user has completed signup
+    # the field sets up to always redirect new tenants and owners to signup
+    is_new = db.Column(db.BOOLEAN, default=True)
     # outstanding fees
     outstanding_rent = db.Column(db.Integer, default=0)
     outstanding_service_charge = db.Column(db.Integer, default=0)
@@ -27,11 +34,8 @@ class User(db.Model, UserMixin):
     lease_start = db.Column(db.DateTime)
     lease_expiry = db.Column(db.DateTime)
     
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
-    def __repr__(self) -> str:
-        return '<User {}, since {}>'.format(self.user_tag, self.joined_date)
+    """RELATIONSHIPS"""
+    payments = db.relationship('Payment', backref='tenant', lazy='dynamic')
 
     """PASSWORD METHODS AND VERIFICATION"""
     @property
@@ -44,62 +48,43 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
-
-    """RELATIONSHIPS"""
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id', name='fk_user_role_id'))
-    payments = db.relationship('Payment', backref='tenant', lazy='dynamic')
-    flat = db.relationship('Flat', uselist=False, backref='tenant')
-
-    def get_users(role: str) -> db.Query:
-        """Returns a joint query of users given the role; staff for all managers and handymen, tenants, managers and handymen."""
-        categs = {'handyman': 4, 'manager': 2, 'tenant': 3}
-        if role == 'staff':
-            managers = User.query.filter_by(role_id=2)
-            handymen = User.query.filter_by(role_id=4)
-            staff = managers.union(handymen)
-            return staff
-        return User.query.filter_by(role_id=categs[role])
-
-    def generate_user_tag(self) -> None:
-        """Generates a user's tag. For admin and residents only."""
-        if self.user_tag is None:
-            # using first letter of role name
-            prefix = self.role.name[0]
-            # hash part of email and use part of hash
-            email_user = self.email.split('@')[0]
-            hash = generate_password_hash(email_user)[-5:]
-            tag = prefix + hash
-            self.user_tag = tag.lower()
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-
-
-class Role(db.Model):
-    """User roles, including the tenants, managers, handymen and admin."""
-    __tablename__ = 'roles'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    
-    """RELATIONSHIPS"""
-    users = db.relationship('User', backref='role', lazy='dynamic')
+    """----------------------------------------------------------"""
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
     def __repr__(self) -> str:
-        return '<Role {} - {}>'.format(self.id, self.name)
+        return '<{} - {}>'.format(self.__class__.__name__, self.user_tag)
 
-    def create_roles() -> None:
-        # run once upon database intiation
-        roles = ['ADMIN', 'MANAGER', 'TENANT', 'HANDYMAN']
-        for role in roles:
-            rl = Role(name=role)
-            db.session.add(rl)
-        db.session.commit()
+    def generate_tag(self) -> None:
+        """Generates a user's tag. For staff, owners and residents only."""
+        if self.user_tag is None:
+            # using first letter of role name
+            prefix = self.role[0]
+            # hash username of email and use the trimmed hash
+            username = self.email.split('@')[0]
+            hash = generate_password_hash(username)[-5:]
+            tag = prefix + hash
+            self.user_tag = tag.lower()
+
+    def get_users(role: str) -> db.Query:
+        """Returns a query of user objects for a specific user role.
+
+        :param role: User role."""
+        if role == 'staff':
+            return User.query.filter_by(is_staff=True)
+        return User.query.filter_by(role=role.upper())
+
+
+@login_manager.user_loader
+def load_user(user_tag):
+    return User.query.get(user_tag)
+
+""" The association table for the flats and users many-to-many relationship."""
+flat_link = db.Table('flat_link',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('flat_id', db.Integer, db.ForeignKey('flats.id'))
+)
 
 
 class Payment(db.Model):
@@ -126,51 +111,34 @@ class Payment(db.Model):
         return '<Payment {} - {}>'.format(self.user_id, self.timestamp)
 
 
-class FlatType(db.Model):
-    """Flat type for 2 or 3 bedroom"""
-    __tablename__ = "flattypes"
-
-    id = db.Column(db.Integer, primary_key=True)
-    bedrooms = db.Column(db.Integer)
-    rent = db.Column(db.Integer)
-    service_charge = db.Column(db.Integer)
-
-    """RELATIONSHIPS"""
-    flats = db.relationship('Flat', backref='type', lazy='dynamic')
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
-    def __repr__(self) -> str:
-        return '<FlatType #{}, {} bedrooms>'.format(self.id, self.bedrooms)
-
-
 class Flat(db.Model):
     """Flat record per flat in every block in the estate."""
     __tablename__ = 'flats'
 
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.Integer)
-    # blocks lettered A - D
-    block = db.Column(db.CHAR)
+    block = db.Column(db.Integer)
 
     """RELATIONSHIPS"""
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='fk_user_flat_id'))
-    flattype_id = db.Column(db.Integer, db.ForeignKey('flattypes.id', name='fk_flat_type_id'))
+    users = db.relationship(
+        'User',
+        secondary=flat_link,
+        backref=db.backref('flats', lazy='dynamic'),
+        lazy='dynamic'
+    )
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
     def __repr__(self) -> str:
-        return '<Flat {}, Block {}>'.format(self.number, self.block)
+        return '<Block {} Flat {}>'.format(self.block, self.number)
 
-    def populate_flats(block: str, type_id: int, count: int) -> None:
-        """Use to populate flats table records with all estate flats.
-
-        :param block: Block letter
-        :param type_id: The FlatType to be set
-        :param count: The total number of flats for the block"""
-        for i in range(1, count+1):
-            flat = Flat(number=i, block=block, flattype_id=type_id)
-            db.session.add(flat)
+    def populate_flats() -> None:
+        """Use to populate flats table with all 64 estate flats."""
+        # 64 blocks
+        for block in range(1, 65):
+            # 8 flats per block
+            for number in range(1, 9):
+                flat = Flat(number=number, block=block)
+                db.session.add(flat)
         db.session.commit()

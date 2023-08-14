@@ -1,20 +1,19 @@
 from flask_login import login_user
-from estate import create_app
+from estate import create_app, db
 from config import Config
-from estate import db
 from estate.models import (
     User,
-    Role,
     Payment,
     Flat,
-    FlatType
+    flat_link
 )
 from flask import (
     render_template, 
     request,
     redirect,
     url_for,
-    flash
+    flash,
+    abort
 )
 from datetime import timedelta
 
@@ -32,17 +31,22 @@ def login():
         if user is not None and user.check_password(password):
             login_user(user, remember=True, duration=timedelta(hours=1))
             next = request.args.get('next')
-            # detect admin user tag
-            if user_tag.startswith('a'):
-                return redirect(url_for('admin.dash'))
-            else:
-                if next is None or not next.startswith('/'):
-                    next = url_for('main.index')
+            # generate user blueprint endpoint with role
+            endpoint = '{}.index'.format(user.role.lower())
+            # send user to requested page if they are authorized
+            if user.role.lower() in next:
                 return redirect(next)
+            # abort otherwise
+            if user.role.lower() not in next:
+                return abort(403)
+            # otherwise send user to homepage of their appropriate blueprint
+            if next is None or not next.startswith('/'):
+                next = url_for(endpoint)
+            return redirect(next)
         flash('Incorrect user ID or password.', 'error')
     return render_template('login.html')
 
 
 @app.shell_context_processor
 def context_processor():
-    return dict(db=db, Role=Role, Payment=Payment, User=User, FlatType=FlatType, Flat=Flat)
+    return dict(db=db, Payment=Payment, User=User, Flat=Flat, flat_link=flat_link)

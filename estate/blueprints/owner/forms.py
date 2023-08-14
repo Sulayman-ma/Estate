@@ -12,7 +12,7 @@ from wtforms.validators import Email, EqualTo
 
 
 
-class RegisterResident(FlaskForm):
+class RegisterOwner(FlaskForm):
     fullname = StringField(label="Full Name", render_kw={
         'placeholder': 'Full Name',
         'required': 'required',
@@ -34,14 +34,3 @@ class RegisterResident(FlaskForm):
     })
     is_active = BooleanField()
     register = SubmitField(label='Register')
-
-
-class Agree(FlaskForm):
-    check = BooleanField()
-    proceed = SubmitField(label='AGREE TO TERMS & CONDITIONS', render_kw={
-        'class': 'button-primary'
-    })
-
-
-class Pay(FlaskForm):
-    pass
