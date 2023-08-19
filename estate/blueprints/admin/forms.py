@@ -53,8 +53,8 @@ class EditStaffInfo(FlaskForm):
     last_name = StringField(label="Last Name", render_kw={
         'placeholder': 'Last Name'
     })
-    user_tag = StringField(label="User Tag", render_kw={
-        'placeholder': 'User Tag'
+    username = StringField(label="Username", render_kw={
+        'placeholder': 'Username'
     })
     email = EmailField(label="E-mail", render_kw={
         'placeholder': 'Email'

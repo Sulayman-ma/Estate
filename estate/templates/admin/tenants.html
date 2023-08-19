@@ -1,12 +1,8 @@
-{% extends "base.html" %}
+{% extends "shared/base.html" %}
 
 {% block title %}Tenants{% endblock %}
 
 {% block content %}
-
-<header>
-    {% include 'partials/admin_nav.html' %}
-</header>
 
 <div class="container">
     <!-- FLASH MESSAGES -->
@@ -24,26 +20,28 @@
         <caption>Estate Tenants</caption>
         <thead>
             <tr>
-                <th>User Tag</th>
-                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
                 <th>Flats Rented</th>
-                <th></th>
+                <th>Outstanding Rent</th>
             </tr>
         </thead>
         <tbody>
             {% for t in tenants %}
             <tr class="{{t.first_name}}{{t.last_name}}{{t.middle_name}}">
-                <td>{{ t.user_tag }}</td>
-                <td>{{ t.first_name }} {{ t.middle_name }} {{ t.last_name }}</td>
+                <td>{{ t.username }}</td>
+                <td>{{ t.email }}</td>
                 <!-- print separated in case of multiple or use select -->
                 <td>
-                <select class="u-full-width">
+                {% if t.flats.all() != [] %}
                 {% for flat in t.flats.all() %}
-                    <option>Block {{ flat.block }}, Flat {{ flat.number }}</option>
+                    <li>Block {{ flat.block }}, Flat {{ flat.number }}</li>
                 {% endfor %}
-                </select>
+                {% else %}
+                NO FLATS RENTED
+                {% endif %}
                 </td>
-                <td><a href="#" class="button button-primary">Edit</a></td>
+                <td>{{ '₦ {:,}'.format(current_user.outstanding_rent) }}</td>
             </tr>
             {% endfor %}
         </tbody>

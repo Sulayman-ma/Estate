@@ -1,0 +1,66 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Modify Flat{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- MAIN CONTENT -->
+    <h2>Modify Flat</h2>
+    <hr>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <!-- FLASH MESSAGES -->
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
+        <div class="flash">
+            <span class="{{ category }}">{{ msg }}</span>
+        </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="four columns">
+                <label>
+                    <span>For Rent</span>
+                    {{ form.for_rent() }}
+                </label>
+            </div>
+            <div class="four columns">
+                <label>
+                    <span>For Sale</span>
+                    {{ form.for_sale() }}
+                </label>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="four columns">
+                {{ form.rent.label}}
+                {{ form.rent(class='u-full-width')}}
+            </div>
+            <div class="four columns">
+                {{ form.cost.label }}
+                {{ form.cost(class='u-full-width') }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="four columns">
+                {{ form.payment_freq.label }}
+                {{ form.payment_freq(class='u-full-width') }}
+            </div>
+            <div class="eight columns">
+                {{ form.description.label }}
+                {{ form.description(class='u-full-width') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="search-div">
+                {{ form.save(class='button-primary') }}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,12 +1,8 @@
-{% extends "base.html" %}
+{% extends "shared/base.html" %}
 
 {% block title %}Edit Staff{% endblock %}
 
 {% block content %}
-
-<header>
-    {% include 'partials/admin_nav.html' %}
-</header>
 
 <div class="container">
     <!-- MAIN CONTENT -->
@@ -43,8 +39,8 @@
                 {{ form.email(class='u-full-width') }}
             </div>
             <div class="three columns">
-                {{ form.user_tag.label }}
-                {{ form.user_tag(class='u-full-width') }}
+                {{ form.username.label }}
+                {{ form.username(class='u-full-width') }}
             </div>
             <div class="three columns">
                 {{ form.number.label }}
@@ -58,8 +54,8 @@
         <div class="row">
             <div class="five columns">
                 <label>
-                    {{ form.is_active() }}
                     <span>Active</span>
+                    {{ form.is_active() }}
                 </label>
             </div>
             <div class="five columns">

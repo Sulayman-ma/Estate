@@ -1,12 +1,10 @@
 from . import owner
+from .forms import ModifyFlat
 from ... import db
-from .forms import (
-    RegisterResident
-)
+from ...decorators import role_required
+from ...models import Flat
 from flask_login import (
     login_required,
-    logout_user,
-    login_user,
     current_user
 )
 from flask import (
@@ -16,71 +14,85 @@ from flask import (
     flash,
     request
 )
-from ...models import (
-    User,
-    Payment,
-    Flat
-)
-from datetime import datetime, timedelta
+from sqlalchemy.exc import IntegrityError
+from wtforms import ValidationError
 
 
 
-@owner.route('/profile')
-# @role_required('TENANT')
-def profile():
+@owner.route('/owner/profile')
+@login_required
+@role_required('OWNER')
+def index():
+    # redirect new users to signup page
+    if current_user.is_new:
+        # direct new users to terms and conditions agreement
+        return redirect(url_for('.agreement'))
     return render_template('owner/profile.html')
 
 
-# @owner.route('/flats')
-# def flats():
-#     types = FlatType.query.all()
-#     return render_template('owner/flats.html', types=types)
-
-
-@owner.route('/lease', methods=['GET', 'POST'])
-def lease():
-    # agreeing to terms and conditions
-    if request.method == 'POST':
-        return redirect(url_for('.register')) 
-    return render_template('owner/lease.html')
-
-
-@owner.route('/renew_payment', methods=['GET', 'POST'])
+@owner.route('/owner/agreement', methods=['GET', 'POST'])
 @login_required
-def renew_payment():
-    return 'Renew payment here'
+@role_required('OWNER')
+def agreement():
+    # agreeing to terms and conditions and stuff
+    if request.method == 'POST' and request.form.get('agree') is not None:
+        # redirect to profile completion for new users
+        return redirect(url_for('auth.edit_profile', id=current_user.id))
+    else:
+        flash('Please accept the terms and conditions before proceeding.', 'misc')
+    return render_template('owner/agreement.html')
 
 
-@owner.route('/signup', methods=['GET', 'POST'])
-def signup():
-    """The signup page for a new owner to enter their information for their profile."""
-    form = RegisterResident()
-    if form.validate_on_submit():
+@owner.route('/owner/modify_flat/<int:id>', methods=['GET', 'POST'])
+@login_required
+@role_required('OWNER')
+def modify_flat(id):
+    flat = Flat.query.get(id)
+    form = ModifyFlat(obj=flat)
+    if form.is_submitted():
         try:
-            user = User(
-                fullname = form.fullname.data,
-                email = form.email.data,
-                number = int(form.number.data),
-                password = form.password.data,
-                # resident role is ID 1, no conflicts here
-                role = form.role.data
-                # account is only deactivated a certain time after lease is terminated
-            )
-            user.generate_user_tag()
-            db.session.add(user)
+            flat.rent = form.rent.data
+            flat.for_rent = form.for_rent.data
+            flat.for_sale = form.for_sale.data
+            flat.cost = form.cost.data
+            flat.description = form.description.data
+            flat.payment_freq = form.payment_freq.data
             db.session.commit()
-            # after registeration, log them in and redirect to make payment
-            login_user(user)
-            return redirect(url_for('.make_payment'))
-        except ValueError:
-            flash('⚠ Invalid input, check passwords and other data', 'error')
+            return redirect(url_for('.index'))
+        except ValidationError:
+            flash('Invalid input(s), please check the fields again.', 'error')
+            return redirect(url_for('.modify_flat', id=id))
+        except IntegrityError:
+            flash('Invalid input(s), please check the fields again.', 'error')
+            return redirect(url_for('.modify_flat', id=id))
         except:
-            flash('⚠ An error has occured, please try again or contact an admin.', 'error')
-    return render_template('owner/register.html', form=form)
+            flash('⚠ An error has occured, please contact the dev if error persists.', 'error')
+            return redirect(url_for('.modify_flat', id=id))
+    return render_template('owner/modify_flat.html', form=form)
 
 
-@owner.route('/logout')
+@owner.route('/owner/flats_on_sale')
 @login_required
-def logout():
-    logout_user()
-    return redirect(url_for('owner.index'))
+@role_required('OWNER')
+def flats_on_sale():
+    """ Buy now button is here, `buy_flat` function carries out the process. The gateway module will also be used in the view function below. """
+    flats = Flat.query.all()
+    return render_template('owner/flats_on_sale.html', flats=flats)
+
+
+@owner.route('/owner/buy_flat/<int:id>', methods=['GET', 'POST'])
+@login_required
+@role_required('OWNER')
+def buy_flat(id):
+    flat = Flat.query.get(id)
+    """ NO TEMPLATE VIEW FUNCTION
+    Permanent implementation will be that of processing the payments with the gateway and then carrying out the rest of the logic as shown below. 
+    
+    As a temporary implementation, when an owner buys a flat, its rent and sale status are set to False and cost amount is reset to 0. 
+    The owner can modify these attributes in their profile at their convenience. """
+    flat.for_rent = False
+    flat.for_sale = False
+    flat.cost = 0
+    current_user.flats.add(flat)
+    db.session.commit()
+    return redirect(url_for('.index'))

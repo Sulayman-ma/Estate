@@ -1,12 +1,8 @@
 from . import tenant
 from ... import db
-from .forms import (
-    RegisterTenant
-)
+from ...decorators import role_required
 from flask_login import (
     login_required,
-    logout_user,
-    login_user,
     current_user
 )
 from flask import (
@@ -16,65 +12,33 @@ from flask import (
     flash,
     request
 )
-from ...models import (
-    User,
-    Payment,
-    Flat
-)
-from datetime import datetime, timedelta
 
 
 
-@tenant.route('/profile')
-# @role_required('TENANT')
-def profile():
+@tenant.route('/tenant/profile')
+@login_required
+@role_required('TENANT')
+def index():
+    # redirect new users to signup page
+    if current_user.is_new:
+        # direct new users to terms and conditions agreement
+        return redirect(url_for('.agreement'))
     return render_template('tenant/profile.html')
 
 
-@tenant.route('/lease', methods=['GET', 'POST'])
-def lease():
-    # agreeing to terms and conditions
-    if request.method == 'POST':
-        return redirect(url_for('.register')) 
-    return render_template('tenant/lease.html')
-
-
-@tenant.route('/renew_payment', methods=['GET', 'POST'])
+@tenant.route('/tenant/agreement', methods=['GET', 'POST'])
 @login_required
+@role_required('TENANT')
+def agreement():
+    # agreeing to terms and conditions and stuff
+    if request.method == 'POST' and request.form.get('agree') is not None:
+        # redirect to profile completion for new users
+        return redirect(url_for('auth.edit_profile', id=current_user.id))
+    return render_template('tenant/agreement.html')
+
+
+@tenant.route('/tenant/renew_payment', methods=['GET', 'POST'])
+@login_required
+@role_required('TENANT')
 def renew_payment():
     return 'Renew payment here'
-
-
-@tenant.route('/signup', methods=['GET', 'POST'])
-def signup():
-    """The signup page for a new tenant to enter their information for their profile."""
-    form = RegisterTenant()
-    if form.validate_on_submit():
-        try:
-            user = User(
-                fullname = form.fullname.data,
-                email = form.email.data,
-                number = int(form.number.data),
-                password = form.password.data,
-                # tenant role is ID 1, no conflicts here
-                role = 'TENANT'
-                # TODO: lease info maybe?
-            )
-            user.generate_user_tag()
-            db.session.add(user)
-            db.session.commit()
-            # after registeration, log them in and redirect to make payment
-            login_user(user)
-            return redirect(url_for('.make_payment'))
-        except ValueError:
-            flash('⚠ Invalid input, check passwords and other data', 'error')
-        except:
-            flash('⚠ An error has occured, please try again or contact an admin.', 'error')
-    return render_template('tenant/register.html', form=form)
-
-
-@tenant.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('tenant.index'))

@@ -21,6 +21,11 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 * {
     box-sizing: border-box;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -145,7 +150,7 @@ nav div li a {
 }
 
 .nav-icon {
-    width: 7%;
+    width: 100px;
 }
 
 /* drop down */
@@ -301,3 +306,17 @@ a.cst-btn {
 
 /* LEASE */
 .lease-title { text-align: center; }
+
+
+/* Footer
+-------------------------------------------------- */
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background-color: rgb(68, 68, 68);
+    color: white;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+}

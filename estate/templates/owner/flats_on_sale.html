@@ -1,6 +1,6 @@
 {% extends "shared/base.html" %}
 
-{% block title %}Flats{% endblock %}
+{% block title %}Flats on Sale{% endblock %}
 
 {% block content %}
 
@@ -12,25 +12,27 @@
     </div>
     {% endfor %}
 
-    <h2>Estate Flats</h2>
+    <h2>Flats on Sale</h2>
 
     <table class="u-full-width staff">
         <thead>
             <tr>
                 <th>Block</th>
                 <th>Flat</th>
-                <th>Owner (Tag)</th>
-                <th>Tenant (Tag)</th>
+                <th>Owner (Email)</th>
+                <th>Sale Cost</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for flat in flats %}
-            {% if flat.for_sale %}
+            {% if flat.for_sale and flat.users.filter_by %}
             <tr>
                 <td>{{ flat.block }}</td>
                 <td>{{ flat.number }}</td>
-                <td>{{ flat.users.filter_by('OWNER').first() or None }}</td>
-                <td>T1234SD</td>
+                <td>{{ flat.get_owner().email or None }}</td>
+                <td>{{ '₦ {:,}'.format(flat.cost) }}</td>
+                <td><a class="button button-primary" href="{{ url_for('.buy_flat', id=flat.id) }}">buy</a></td>
             </tr>
             {% endif %}
             {% endfor %}

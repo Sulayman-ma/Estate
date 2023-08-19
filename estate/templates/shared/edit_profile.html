@@ -1,0 +1,59 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <!-- MAIN CONTENT -->
+    <h2>Edit Profile</h2>
+    <hr>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="row">
+            <div class="four columns">
+                {{ form.username.label }}
+                {{ form.username(class='u-full-width') }}
+            </div>
+            <div class="four columns">
+                {{ form.number.label }}
+                {{ form.number(class='u-full-width') }}
+            </div>
+            <div class="four columns">
+                {{ form.email.label }}
+                {{ form.email(class='u-full-width') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                {{ form.first_name.label }}
+                {{ form.first_name(class='u-full-width') }}
+            </div>
+            <div class="four columns">
+                {{ form.middle_name.label }}
+                {{ form.middle_name(class='u-full-width') }}
+            </div>
+            <div class="four columns">
+                {{ form.last_name.label }}
+                {{ form.last_name(class='u-full-width') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="ten columns">
+                {{ form.save(class='button-primary') }}
+                <input type="reset" value="Clear Form">
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

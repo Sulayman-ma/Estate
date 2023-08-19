@@ -1,12 +1,8 @@
-{% extends "base.html" %}
+{% extends "shared/base.html" %}
 
 {% block title %}Owners{% endblock %}
 
 {% block content %}
-
-<header>
-    {% include 'partials/admin_nav.html' %}
-</header>
 
 <div class="container">
     <!-- FLASH MESSAGES -->
@@ -24,8 +20,8 @@
         <caption>Flat Owners</caption>
         <thead>
             <tr>
-                <th>User Tag</th>
-                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
                 <th>Flats Owned</th>
                 <th></th>
             </tr>
@@ -33,15 +29,17 @@
         <tbody>
             {% for t in owners %}
             <tr class="{{t.first_name}}{{t.last_name}}{{t.middle_name}}">
-                <td>{{ t.user_tag }}</td>
-                <td>{{ t.first_name }} {{ t.middle_name }} {{ t.last_name }}</td>
-                <!-- print separated in case of multiple or use select -->
+                <td>{{ t.username }}</td>
+                <td>{{ t.email }}</td>
+                <!-- using select tag because I can -->
                 <td>
-                <select class="u-full-width">
-                {% for flat in t.flats.all() %}
-                    <option>Block {{ flat.block }}, Flat {{ flat.number }}</option>
-                {% endfor %}
-                </select>
+                    {% if t.flats.all() != [] %}
+                    {% for flat in t.flats.all() %}
+                        <li>Block {{ flat.block }}, Flat {{ flat.number }}</li>
+                    {% endfor %}
+                    {% else %}
+                    NO FLATS OWNED
+                    {% endif %}
                 </td>
                 <td><a href="#" class="button button-primary">Edit</a></td>
             </tr>

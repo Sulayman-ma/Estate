@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "shared/base.html" %}
 
 {% block title %}Make Payment{% endblock %}
 
@@ -17,7 +17,7 @@
                         <div class="logo"><img class="u-max-full-width" src="{{ url_for('static', filename='img/logo.png') }}"></div>
                     </div>
                     <div class="six columns">
-                        <h6>Resident ID - {{ current_user.user_tag }}</h6>
+                        <h6>Resident ID - {{ current_user.username }}</h6>
                     </div>
                 </div>
 

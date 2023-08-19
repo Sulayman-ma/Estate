@@ -14,7 +14,7 @@ from flask_principal import Principal
 
 
 login_manager = LoginManager()
-login_manager.login_view = 'login'
+login_manager.login_view = 'auth.login'
 # use in case of login with multiple blueprints
 # login_manager.blueprint_login_views = {
 #     'tenant': '/login',
@@ -42,8 +42,12 @@ def create_app(config_object):
     # blueprints
     from .blueprints.tenant import tenant
     from .blueprints.admin import admin
+    from .blueprints.owner import owner
+    from .blueprints.auth import auth
 
     app.register_blueprint(admin)
     app.register_blueprint(tenant)
+    app.register_blueprint(owner)
+    app.register_blueprint(auth)
 
     return app

@@ -15,7 +15,7 @@
     <!-- MAIN CONTENT -->
     <!-- ONLY ALLOW AUTHENTICATED USERS -->
     {% if current_user.is_authenticated %}
-    <h2>Tenant Profile</h2> <hr>
+    <h2>Owner Profile</h2> <hr>
 
     <div class="row">
         <div class="two columns">
@@ -28,9 +28,9 @@
                     {{ current_user.first_name }} {{ current_user.middle_name }} {{ current_user.last_name }}
                 </li>
                 <li>{{ current_user.username }}</li>
-                <li>{{ current_user.gender }}</li>
-                <li>{{ current_user.joined_date }}</li>
             </ul>
+            
+            
         </div>
         <div class="six columns">
             <h5>Contact Info</h5>
@@ -47,7 +47,7 @@
 
     <div class="row">
         <div class="twelve columns">
-            <h5>Flat(s) Rented</h5>
+            <h5>Flat(s) Owned</h5>
             <table class="u-full-width">
                 <thead>
                     <tr>
@@ -55,7 +55,8 @@
                         <th>Flat</th>
                         <th>Rent Cost</th>
                         <th>Sale Cost</th>
-                        <th>Owner</th>
+                        <th>Current Tenant</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,8 +79,9 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ flat.users.filter_by(role='OWNER').first().email or None}}
+                            {{ flat.users.filter_by(role='TENANT').first().email or None}}
                         </td>
+                        <td><a class="" href="{{ url_for('.modify_flat', id=flat.id) }}">Manage</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -90,21 +92,8 @@
     <hr>
 
     <div class="row">
-        <!-- TODO: do it in such a way to recognize multiple flat renting -->
-        <h5>Lease Details</h5>
-        {% if current_user.flats.all() != [] and current_user.lease_amount != 0 %}
-        {{ current_user.flats.all()[0] }} <br>
-        Rent Amount - {{ '₦ {:,}'.format(current_user.lease_amount) }} <br>
-        Lease Duration - {{ current_user.lease_duration }} year(s)<br>
-        Expirirng On - {{ current_user.lease_expiry.strftime('%d %B, %Y') }}
-        {% else %}
-        <p>User has no active lease. Kindly secure one to see lease details.</p>
-        {% endif %}
-    </div>
-
-    <div class="row">
         <!-- show button to get the lease if none -->
-        <a class="button button-primary" href="#">Make Payment</a>
+        <a class="button button-primary" href="{{ url_for('.flats_on_sale') }}">Buy New Flat</a>
     </div>
     <hr>
 

@@ -1,36 +1,29 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import (
-    StringField,
-    SelectField,
     BooleanField,
-    PasswordField,
-    EmailField,
-    TelField,
-    SubmitField
+    SubmitField,
+    IntegerField,
+    TextAreaField
 )
-from wtforms.validators import Email, EqualTo
+from wtforms.validators import (
+    InputRequired
+)
 
 
 
-class RegisterOwner(FlaskForm):
-    fullname = StringField(label="Full Name", render_kw={
-        'placeholder': 'Full Name',
-        'required': 'required',
+class ModifyFlat(FlaskForm):
+    for_sale = BooleanField()
+    cost = IntegerField(label="Sale Cost", render_kw={
+        'placeholder': 'Sale Cost'
     })
-    email = EmailField(label="E-mail", render_kw={
-        'placeholder': 'Email', 'required': 'required',
-        }, validators=[Email()])
-    number = TelField(label="Number", render_kw={
-        'placeholder': 'Number',
-        'required': 'required',
+    for_rent = BooleanField()
+    rent = IntegerField(label="Rent Cost", render_kw={
+        'placeholder': 'Rent Cost'
+    }, validators=[InputRequired()])
+    payment_freq = IntegerField(label="Payment Frequency", render_kw={
+        'placeholder': 'Payment Frequency (in months)'
+    }, validators=[InputRequired()])
+    description = TextAreaField(label="Description", render_kw={
+        'placeholder': 'Details about the flat, its current state and any additional info...'
     })
-    password = PasswordField(EqualTo('password2', message='Passwords must match'),render_kw={
-        'placeholder': 'Password',
-        'required': 'required',
-    })
-    password2 = PasswordField(render_kw={
-        'placeholder': 'Confirm Password',
-        'required': 'required',
-    })
-    is_active = BooleanField()
-    register = SubmitField(label='Register')
+    save = SubmitField(label='Save Changes')
