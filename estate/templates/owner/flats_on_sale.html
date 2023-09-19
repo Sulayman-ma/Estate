@@ -7,7 +7,7 @@
 <div class="container">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
-    <div class="flash">
+    <div class="pop-flash">
         <span class="{{ category }}">{{ msg }}</span>
     </div>
     {% endfor %}
@@ -26,13 +26,15 @@
         </thead>
         <tbody>
             {% for flat in flats %}
-            {% if flat.for_sale and flat.users.filter_by %}
+            {% 
+                if flat.for_sale and flat not in current_user.flats.all() and not flat.get_tenant()
+            %}
             <tr>
                 <td>{{ flat.block }}</td>
                 <td>{{ flat.number }}</td>
-                <td>{{ flat.get_owner().email or None }}</td>
+                <td>{{ flat.get_owner().email or 'LSDPC' }}</td>
                 <td>{{ '₦ {:,}'.format(flat.cost) }}</td>
-                <td><a class="button button-primary" href="{{ url_for('.buy_flat', id=flat.id) }}">buy</a></td>
+                <td><a class="button button-primary" href="{{ url_for('.agreement', id=flat.id) }}">buy</a></td>
             </tr>
             {% endif %}
             {% endfor %}

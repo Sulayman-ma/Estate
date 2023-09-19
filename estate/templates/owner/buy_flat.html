@@ -1,0 +1,31 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Authentication{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <form method="post">
+        {{ form.hidden_tag() }}
+
+       <!-- FLASH MESSAGES -->
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
+        <div class="pop-flash">
+            <span class="{{ category }}">{{ msg }}</span>
+        </div>
+        {% endfor %}
+        <h4 class="stats">Confirm Password</h4>
+        <hr>
+        <div class="row stats">
+            {{ form.password.label }}
+            {{ form.password() }}
+        </div>
+        <div class="row stats">
+            {{ form.confirm() }}
+        </div>
+    </form>
+
+    <a class="button" href="{{ url_for('.flats_on_sale') }}"><< Back to Flats</a>
+</div>
+
+{% endblock %}

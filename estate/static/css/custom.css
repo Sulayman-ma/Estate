@@ -16,6 +16,24 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 
 .warning { color: rgb(255, 94, 0); }
 
+.pop-flash {
+    position: fixed;
+    top: 0;
+    /* bottom: 0; */
+    right: 0;
+    left: 0;
+    margin: 10px auto;
+    text-align: center;
+    width: 23%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    font-size: x-large;
+    font-variant: small-caps;
+    transition: opacity 0.6s ease;
+    opacity: 1;
+    background-color: rgb(255, 255, 255);
+}
+
 
 /* Misc
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -320,3 +338,7 @@ footer {
     width: 100%;
     text-align: center;
 }
+
+
+/* Profile
+-------------------------------------------------- */

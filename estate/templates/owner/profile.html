@@ -7,7 +7,7 @@
 <div class="container">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
-    <div class="flash">
+    <div class="pop-flash">
         <span class="{{ category }}">{{ msg }}</span>
     </div>
     {% endfor %}
@@ -29,8 +29,6 @@
                 </li>
                 <li>{{ current_user.username }}</li>
             </ul>
-            
-            
         </div>
         <div class="six columns">
             <h5>Contact Info</h5>
@@ -51,19 +49,17 @@
             <table class="u-full-width">
                 <thead>
                     <tr>
-                        <th>Block</th>
-                        <th>Flat</th>
+                        <th>Block, Flat</th>
                         <th>Rent Cost</th>
                         <th>Sale Cost</th>
-                        <th>Current Tenant</th>
+                        <th>Tenant</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for flat in current_user.flats.all() %}
                     <tr>
-                        <td>{{ flat.block }}</td>
-                        <td>{{ flat.number }}</td>
+                        <td>{{ flat.block }}, {{ flat.number }}</td>
                         <td>
                             {% if flat.for_rent %}
                             {{ '₦ {:,}'.format(flat.rent) }}
@@ -79,9 +75,9 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ flat.users.filter_by(role='TENANT').first().email or None}}
+                            {{ flat.get_tenant().email or None}}
                         </td>
-                        <td><a class="" href="{{ url_for('.modify_flat', id=flat.id) }}">Manage</a></td>
+                        <td><a href="{{ url_for('.modify_flat', id=flat.id) }}">Manage</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -89,13 +85,10 @@
         </div>
     </div>
 
-    <hr>
-
     <div class="row">
         <!-- show button to get the lease if none -->
         <a class="button button-primary" href="{{ url_for('.flats_on_sale') }}">Buy New Flat</a>
     </div>
-    <hr>
 
     {% endif %}
 </div>

@@ -7,7 +7,7 @@
 <div class="container">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
-    <div class="flash">
+    <div class="pop-flash">
         <span class="{{ category }}">{{ msg }}</span>
     </div>
     {% endfor %}
@@ -47,22 +47,24 @@
 
     <div class="row">
         <div class="twelve columns">
-            <h5>Flat(s) Rented</h5>
+            <h5>Lease Details</h5>
             <table class="u-full-width">
                 <thead>
                     <tr>
-                        <th>Block</th>
-                        <th>Flat</th>
+                        <th>Block, Flat</th>
+                        <th>Lease Start</th>
+                        <th>Lease Expiry</th>
                         <th>Rent Cost</th>
-                        <th>Sale Cost</th>
+                        <th>Overdue</th>
                         <th>Owner</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for flat in current_user.flats.all() %}
                     <tr>
-                        <td>{{ flat.block }}</td>
-                        <td>{{ flat.number }}</td>
+                        <td>{{ flat.block }}, {{ flat.number }}</td>
+                        <td>{{ flat.lease_start }}</td>
+                        <td>{{ flat.lease_expiry }}</td>
                         <td>
                             {% if flat.for_rent %}
                             {{ '₦ {:,}'.format(flat.rent) }}
@@ -70,15 +72,13 @@
                             ❌
                             {% endif %}
                         </td>
+                        {% if flat.rent_overdue == 0 %}
+                        <td class="success">FULLY PAID</td>
+                        {% else %}
+                        <td class="error">{{ '₦ {:,}'.format(flat.rent_overdue)  }}</td>
+                        {% endif %}
                         <td>
-                            {% if flat.for_sale %}
-                            {{ '₦ {:,}'.format(flat.cost) }}
-                            {% else %}
-                            ❌
-                            {% endif %}
-                        </td>
-                        <td>
-                            {{ flat.users.filter_by(role='OWNER').first().email or None}}
+                            {{ flat.get_owner().email or None}}
                         </td>
                     </tr>
                     {% endfor %}
@@ -87,26 +87,7 @@
         </div>
     </div>
 
-    <hr>
-
-    <div class="row">
-        <!-- TODO: do it in such a way to recognize multiple flat renting -->
-        <h5>Lease Details</h5>
-        {% if current_user.flats.all() != [] and current_user.lease_amount != 0 %}
-        {{ current_user.flats.all()[0] }} <br>
-        Rent Amount - {{ '₦ {:,}'.format(current_user.lease_amount) }} <br>
-        Lease Duration - {{ current_user.lease_duration }} year(s)<br>
-        Expirirng On - {{ current_user.lease_expiry.strftime('%d %B, %Y') }}
-        {% else %}
-        <p>User has no active lease. Kindly secure one to see lease details.</p>
-        {% endif %}
-    </div>
-
-    <div class="row">
-        <!-- show button to get the lease if none -->
-        <a class="button button-primary" href="#">Make Payment</a>
-    </div>
-    <hr>
+    <a class="button button-primary" href="{{ url_for('.flats_for_rent') }}">SECURE LEASE</a>
 
     {% endif %}
 </div>

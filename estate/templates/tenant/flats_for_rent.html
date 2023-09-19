@@ -1,6 +1,6 @@
 {% extends "shared/base.html" %}
 
-{% block title %}Flats{% endblock %}
+{% block title %}Flats for Rent{% endblock %}
 
 {% block content %}
 
@@ -12,25 +12,30 @@
     </div>
     {% endfor %}
 
-    <h2>Estate Flats</h2>
+    <h2>Flats for Rent</h2>
 
     <table class="u-full-width staff">
         <thead>
             <tr>
                 <th>Block</th>
                 <th>Flat</th>
-                <th>Owner (email)</th>
-                <th>Tenant (email)</th>
+                <th>Owner (Email)</th>
+                <th>Rent Cost</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for flat in flats %}
+            <!-- flat for rent and currently not rented -->
+            {% if not flat.get_tenant() and flat.for_rent and flat.get_owner() %}
             <tr>
                 <td>{{ flat.block }}</td>
                 <td>{{ flat.number }}</td>
-                <td>{{ flat.get_owner().email or None }}</td>
-                <td>{{ flat.get_tenant().email or None }}</td>
+                <td>{{ flat.get_owner().email }}</td>
+                <td>{{ '₦ {:,}'.format(flat.rent) }}</td>
+                <td><a class="button button-primary" href="{{ url_for('.agreement', id=flat.id) }}">Process Lease</a></td>
             </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
     </table>

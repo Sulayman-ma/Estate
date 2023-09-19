@@ -7,7 +7,7 @@
 <div class="container">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
-    <div class="flash">
+    <div class="pop-flash">
         <span class="{{ category }}">{{ msg }}</span>
     </div>
     {% endfor %}
@@ -28,7 +28,7 @@
         </thead>
         <tbody>
             {% for t in owners %}
-            <tr class="{{t.first_name}}{{t.last_name}}{{t.middle_name}}">
+            <tr class="{{t.username}}">
                 <td>{{ t.username }}</td>
                 <td>{{ t.email }}</td>
                 <!-- using select tag because I can -->

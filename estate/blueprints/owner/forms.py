@@ -3,7 +3,8 @@ from wtforms.fields import (
     BooleanField,
     SubmitField,
     IntegerField,
-    TextAreaField
+    TextAreaField,
+    PasswordField
 )
 from wtforms.validators import (
     InputRequired
@@ -27,3 +28,12 @@ class ModifyFlat(FlaskForm):
         'placeholder': 'Details about the flat, its current state and any additional info...'
     })
     save = SubmitField(label='Save Changes')
+
+
+class ConfirmPassword(FlaskForm):
+    password = PasswordField(label='Password', render_kw={
+        'placeholder': 'Please enter your password'
+    }, validators=[InputRequired()])
+    confirm = SubmitField(label='CONFIRM', render_kw={
+        'class': 'button-primary'
+    })

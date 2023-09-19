@@ -14,7 +14,7 @@
 
         <!-- FLASH MESSAGES -->
         {% for category, msg in get_flashed_messages(with_categories=True) %}
-        <div class="flash">
+        <div class="pop-flash">
             <span class="{{ category }}">{{ msg }}</span>
         </div>
         {% endfor %}
@@ -46,10 +46,6 @@
         </div>
 
         <div class="row">
-            <div class="four columns">
-                {{ form.payment_freq.label }}
-                {{ form.payment_freq(class='u-full-width') }}
-            </div>
             <div class="eight columns">
                 {{ form.description.label }}
                 {{ form.description(class='u-full-width') }}

@@ -3,7 +3,6 @@ from ... import db
 from ...decorators import role_required
 from ...models import (
     User,
-    Payment,
     Flat
 )
 from .forms import (
@@ -18,10 +17,11 @@ from flask import (
     flash
 )
 from flask_login import (
-    logout_user, 
     login_required
 )
 from sqlalchemy.exc import IntegrityError
+from wtforms import ValidationError
+from datetime import datetime
 
 
 
@@ -59,8 +59,10 @@ def register_staff():
             )
             db.session.add(staff)
             # initial usernames are automatically generated
-            # staff.generate_tag()
             db.session.commit()
+        except ValidationError:
+            flash('Invalid input, please check all fields.', 'error')
+            return redirect(url_for('.register_staff'))
         except IntegrityError:
             flash('⚠ Email already taken', 'misc')
             return redirect(url_for('.register_staff'))
@@ -92,6 +94,9 @@ def edit_staff(id):
             # db.session.add(user)
             db.session.commit()
         # for conflicts in unique fields; Username and email
+        except ValidationError:
+            flash('Invalid input, please check all fields.', 'error')
+            return redirect(url_for('.edit_staff', id=id))
         except IntegrityError:
             flash('⚠ Email or Username is already taken.', 'misc')
             return redirect(url_for('.edit_staff', id=id))
@@ -107,7 +112,7 @@ def edit_staff(id):
 @login_required
 @role_required('ADMIN')
 def payments():
-    payments = Payment.query.all()
+    # payments = Payment.query.all()
     # TODO: paginate the payments
 
     # TODO: provide filters for search by; Username, date/dates range
@@ -119,7 +124,7 @@ def payments():
 @role_required('ADMIN')
 def flats():
     flats = Flat.query.all()
-    # TODO: paginate the flats per block, to have 64 pages, easier that a search filter
+    # TODO: paginate the flats per block, to have 64 pages, easier than a search filter
 
     # TODO: provide filters for search by; Username, block
     return render_template('admin/flats.html', flats=flats)
@@ -160,7 +165,7 @@ def tenants():
     tenants = User.get_users('tenant')
     # TODO: paginate the template
     # TODO: add filters for search
-    return render_template('admin/tenants.html', tenants=tenants)
+    return render_template('admin/tenants.html', tenants=tenants, year=datetime.today().year)
 
 
 @admin.route('/admin/owners')

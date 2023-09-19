@@ -1,0 +1,41 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Lease{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <form method="POST">
+        <!-- FLASH MESSAGES -->
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
+        <div class="pop-flash">
+            <span class="{{ category }}">{{ msg }}</span>
+        </div>
+        {% endfor %}
+
+        <h2 class="stats">Pay Rent</h2>
+        <hr>
+        {{ form.hidden_tag() }}
+
+        <p>Rent amount is {{ '₦ {:,}'.format(rent) }}, you may pay partially or fully. Partial payments must be completed before the next payment is due. Terms & Conditions apply.</p>
+        <div class="row stats">
+            {{ form.amount.label }}
+            {{ form.amount() }}
+        </div>
+        <div class="row stats">
+            {{ form.password.label }}
+            {{ form.password() }}
+        </div>
+        <div class="row stats">
+            {{ form.status.label }}
+            {{ form.status() }}
+        </div>
+        <div class="row stats">
+            {{ form.confirm() }}
+        </div>
+    </form>
+
+    <a class="button" href="{{ url_for('.flats_for_rent') }}"><< Back to Flats</a>
+</div>
+
+{% endblock %}

@@ -7,7 +7,7 @@
 <div class="container">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
-    <div class="flash">
+    <div class="pop-flash">
         <span class="{{ category }}">{{ msg }}</span>
     </div>
     {% endfor %}
@@ -17,8 +17,9 @@
     <table class="u-full-width staff">
         <thead>
             <tr>
+                <th>Flat ID</th>
+                <th>Tenant Username</th>
                 <th>Payment Type</th>
-                <th>Username</th>
                 <th>Year</th>
                 <th>Amount</th>
                 <th>Date</th>
@@ -28,10 +29,11 @@
         <tbody>
             {% for payment in payments %}
             <tr>
-                <td>{{ payment.type }}</td>
+                <td>{{ payment.flat_id }}</td>
                 <td>{{ payment.username }}</td>
+                <td>{{ payment.type }}</td>
                 <td>{{ payment.year }}</td>
-                <td>{{ payment.amount }}</td>
+                <td>{{ '₦ {:,}'.format(payment.amount) }}</td>
                 <td>{{ payment.timestamp }}</td>
                 <td>{{ payment.status }}</td>
             </tr>

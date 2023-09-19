@@ -25,18 +25,9 @@ class User(db.Model, UserMixin):
     # `is_new` boolean will reset to False after the user has completed signup
     # the field sets up to always redirect new tenants and owners to signup
     is_new = db.Column(db.BOOLEAN, default=True)
-    # outstanding fees
-    outstanding_rent = db.Column(db.Integer, default=0)
-    outstanding_service_charge = db.Column(db.Integer, default=0)
-    # lease duration in number of years
-    lease_duration = db.Column(db.Integer, default=1)
-    # expiry date is DateTime of datetime.now() + lease duration years
-    lease_start = db.Column(db.Date, default=datetime.today())
-    lease_expiry = db.Column(db.Date, default=datetime.today())
-    lease_amount = db.Column(db.Integer, default=0)
     
     """RELATIONSHIPS"""
-    payments = db.relationship('Payment', backref='tenant', lazy='dynamic')
+    # payments = db.relationship('Payment', backref='tenant', lazy='dynamic')
 
     """PASSWORD METHODS AND VERIFICATION"""
     @property
@@ -64,7 +55,13 @@ class User(db.Model, UserMixin):
             self.username = tag.lower()
 
     def __repr__(self) -> str:
-        return '<{} - {}>'.format(self.__class__.__name__, self.username)
+        return '<{} - {}>'.format(self.role, self.username)
+    
+    def get(username: str) -> db.Query:
+        """ Return the `User` instance of the user with the username given.
+
+        :param username: User's username(unique) """
+        return User.query.filter_by(username=username).first()
 
     def get_users(role: str) -> db.Query:
         """Returns a query of user objects for a specific user role.
@@ -86,29 +83,29 @@ flat_link = db.Table('flat_link',
 )
 
 
-class Payment(db.Model):
-    """Payment record model."""
-    __tablename__ = 'payments'
+# class Payment(db.Model):
+#     """Payment record model."""
+#     __tablename__ = 'payments'
 
-    id = db.Column(db.Integer, primary_key=True)
-    # service charge or rent
-    type = db.Column(db.String(64), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
-    # status; full or partial payment
-    status = db.Column(db.String(128), nullable=False)
-    # year corresponding to payment
-    year = db.Column(db.Integer, default=datetime.today().year)
-    timestamp = db.Column(db.DateTime, default=datetime.now())
+#     id = db.Column(db.Integer, primary_key=True)
+#     # buy or rent
+#     type = db.Column(db.String(64), nullable=False)
+#     amount = db.Column(db.Integer, nullable=False)
+#     # status; full or partial payment
+#     status = db.Column(db.String(128), nullable=False)
+#     # year corresponding to payment
+#     year = db.Column(db.Integer, default=datetime.today().year)
+#     timestamp = db.Column(db.DateTime, default=datetime.now())
 
-    """RELATIONSHIPS"""
-    username = db.Column(db.String(64), db.ForeignKey('users.username', name='fk_payment_user'))
-    flat_id = db.Column(db.Integer, db.ForeignKey('flats.id', name='fk_payment_flat'))
+#     """RELATIONSHIPS"""
+#     user_id = db.Column(db.String(64), db.ForeignKey('users.id', name='fk_payment_user'))
+#     flat_id = db.Column(db.Integer, db.ForeignKey('flats.id', name='fk_payment_flat'))
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+#     def __init__(self, **kwargs) -> None:
+#         super().__init__(**kwargs)
 
-    def __repr__(self) -> str:
-        return '<Payment {} - {} ({})>'.format(self.timestamp, self.username, self.amount)
+#     def __repr__(self) -> str:
+#         return '<Payment {} - {} ({})>'.format(self.timestamp, self.username, self.amount)
 
 
 class Flat(db.Model):
@@ -121,13 +118,16 @@ class Flat(db.Model):
     for_rent = db.Column(db.BOOLEAN, default=False)
     for_sale = db.Column(db.BOOLEAN, default=True)
     description = db.Column(db.Text())
-    """" Rent payment frequency in number of months 
-    divided by 12 in templates to reflect years if >=12 """
-    payment_freq = db.Column(db.Integer, default=12)    
+    # payment_freq = db.Column(db.Integer, default=12)    
     # rent is set by the owner when the flat is bought
     rent = db.Column(db.Integer, default=0)
-    # default cost of purchase from LSDPC is 10 mil, owner can change this
-    cost = db.Column(db.Integer, default=10000000)
+    # default cost of purchase from LSDPC is 1 mil
+    cost = db.Column(db.Integer, default=1000000)
+    lease_duration = db.Column(db.Integer, default=1)
+    lease_start = db.Column(db.Date)
+    # expiry date is DateTime of datetime.now() + lease duration years
+    lease_expiry = db.Column(db.Date)
+    rent_overdue = db.Column(db.Integer)
 
     """RELATIONSHIPS"""
     users = db.relationship(
@@ -136,28 +136,32 @@ class Flat(db.Model):
         backref=db.backref('flats', lazy='dynamic'),
         lazy='dynamic'
     )
-    payments = db.relationship('Payment', backref='flat', lazy='dynamic')
+    # payments = db.relationship('Payment', backref='flat', lazy='dynamic')
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
     def __repr__(self) -> str:
-        return 'Block {}, Flat {}'.format(self.block, self.number)
+        return '<Block {}, Flat {}>'.format(self.block, self.number)
     
     def get_tenant(self) -> User:
         return self.users.filter_by(role='TENANT').first()
 
     def get_owner(self) -> User:
         return self.users.filter_by(role='OWNER').first()
-    
-    # TODO: do set methods for tenant and owners too if needed
+    """ GET AND SET OWNER/TENANT
 
-    def populate_flats() -> None:
-        """Use to populate flats table with all 64 estate flats."""
+    Instead of setting owner and tenant, the current owner/tenant is simply removed and the new one is added. All implemented in the necessary view function.
+    """
+
+    def populate_flats(b: int, f: int) -> None:
+        """Use to populate flats table with all 64 estate flats.
+        :param b: number of blocks
+        "param f: number of flats per block"""
         # 64 blocks
-        for block in range(1, 6):
+        for block in range(1, b+1):
             # 8 flats per block
-            for number in range(1, 9):
+            for number in range(1, f+1):
                 flat = Flat(number=number, block=block)
                 db.session.add(flat)
         db.session.commit()

@@ -33,11 +33,11 @@ def edit_profile(id):
             current_user.middle_name = form.middle_name.data or ''
             current_user.last_name = form.last_name.data
             current_user.number = form.number.data
-            current_user.new_password = form.new_password.data
-            if current_user.is_new:
-                current_user.is_new = False
-            db.session.add(current_user._get_current_object())
+            # if current_user.is_new:
+            #     current_user.is_new = False
+            # db.session.add(current_user._get_current_object())
             db.session.commit()
+            flash('Edit successful ✔', 'success')
         # TODO: validation handler
         except IntegrityError:
             flash('⚠ Username already taken', 'misc')

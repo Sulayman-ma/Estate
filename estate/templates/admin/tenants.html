@@ -7,7 +7,7 @@
 <div class="container">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
-    <div class="flash">
+    <div class="pop-flash">
         <span class="{{ category }}">{{ msg }}</span>
     </div>
     {% endfor %}
@@ -23,25 +23,36 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Flats Rented</th>
-                <th>Outstanding Rent</th>
+                <th>Years Overdue</th>
             </tr>
         </thead>
         <tbody>
             {% for t in tenants %}
-            <tr class="{{t.first_name}}{{t.last_name}}{{t.middle_name}}">
+            <tr class="{{t.username}}">
                 <td>{{ t.username }}</td>
                 <td>{{ t.email }}</td>
                 <!-- print separated in case of multiple or use select -->
                 <td>
-                {% if t.flats.all() != [] %}
-                {% for flat in t.flats.all() %}
-                    <li>Block {{ flat.block }}, Flat {{ flat.number }}</li>
-                {% endfor %}
-                {% else %}
-                NO FLATS RENTED
-                {% endif %}
+                    {% if t.flats.all() != [] %}
+                    {% for flat in t.flats.all() %}
+                        <li>Block {{ flat.block }}, Flat {{ flat.number }}</li>
+                    {% endfor %}
+                    {% else %}
+                    NO FLATS RENTED
+                    {% endif %}
                 </td>
-                <td>{{ '₦ {:,}'.format(current_user.outstanding_rent) }}</td>
+                <td>
+                    {% if t.flats.all() != [] %}
+                    {% for f in t.flats.all() %}
+                        {% if year > f.lease_expiry.year %}
+                        <li>{{ year - f.lease_expiry.year }}</li>
+                        {% else %}
+                        <li>0</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
