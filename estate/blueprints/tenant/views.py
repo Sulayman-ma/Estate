@@ -2,7 +2,6 @@ from . import tenant
 from ... import db
 from ...decorators import role_required
 from ...models import Flat
-from ...duckstack.transaction import Transaction
 from .forms import MakePayment
 from datetime import datetime
 from dateutil.relativedelta import relativedelta

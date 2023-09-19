@@ -3,7 +3,6 @@ from .forms import ModifyFlat, ConfirmPassword
 from ... import db
 from ...decorators import role_required
 from ...models import Flat
-from ...duckstack.transaction import Transaction
 from flask_login import (
     login_required,
     current_user
