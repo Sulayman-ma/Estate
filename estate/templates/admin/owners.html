@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -12,40 +12,53 @@
     </div>
     {% endfor %}
 
-    <div class="search-div">
-        <input type="text" onkeyup="search()" placeholder="Search for tenant by name" id="searchBtn">
+    <div class="header">
+        <h1>Estate Owners</h1>
     </div>
 
-    <table class="u-full-width staff">
-        <caption>Flat Owners</caption>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Flats Owned</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for t in owners %}
-            <tr class="{{t.username}}">
-                <td>{{ t.username }}</td>
-                <td>{{ t.email }}</td>
-                <!-- using select tag because I can -->
-                <td>
-                    {% if t.flats.all() != [] %}
-                    {% for flat in t.flats.all() %}
-                        <li>Block {{ flat.block }}, Flat {{ flat.number }}</li>
-                    {% endfor %}
-                    {% else %}
-                    NO FLATS OWNED
-                    {% endif %}
-                </td>
-                <td><a href="#" class="button button-primary">Edit</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="content">
+        <div class="search-div">
+            <input type="text" onkeyup="search()" placeholder="Search for tenant by name" id="searchBtn">
+        </div>
+
+        <table class="pure-table pure-table-horizontal pure-table-striped mg-top-20">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Flats Owned</th>
+                    <th>Tenant Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in owners %}
+                <tr class="{{t.username}}">
+                    <td>{{ t.username }}</td>
+                    <td>{{ t.email }}</td>
+                    <!-- using select tag because I can -->
+                    <td>
+                        {% if t.flats.all() != [] %}
+                        {% for flat in t.flats.all() %}
+                            <li style="list-style-type: none;">Block {{ flat.block }}, Flat {{ flat.number }}</li>
+                        {% endfor %}
+                        {% else %}
+                        NO FLATS OWNED
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if t.flats.all() != [] %}
+                        {% for flat in t.flats.all() %}
+                            <li style="list-style-type: none;">{{ flat.get_tenant().username or 'NO TENANT' }}</li>
+                        {% endfor %}
+                        {% else %}
+                            <li style="list-style-type: none;" class="warning">NO TENANT</li>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

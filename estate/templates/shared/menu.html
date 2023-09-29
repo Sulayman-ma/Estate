@@ -1,0 +1,89 @@
+{% if current_user.is_authenticated %}
+
+<!-- ADMIN MENU -->
+{% if current_user.role == 'ADMIN' %}
+<div class="pure-menu">
+    <span class="pure-menu-heading">GLOVER ADMIN</span>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.index') }}">Dashboard</a>
+        </li>
+        <!-- <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <a href="#" id="menuLink1" class="pure-menu-link">Staff</a>
+            <ul class="pure-menu-children">
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{ url_for('admin.all_staff') }}">All Staff</a>
+                </li>
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{ url_for('admin.register_staff') }}">Register Staff</a>
+                </li>
+            </ul>
+        </li> -->
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.all_staff') }}">All Staff</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.register_staff') }}">Register Staff</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.create_user') }}">Create User</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.tenants') }}">Tenants</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.owners') }}">Owners</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.payments') }}">Payment History</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('admin.send_notice') }}">Bulletin</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('auth.logout') }}">Logout</a>
+        </li>
+    </ul>
+</div>
+<!-- ------------------ -->
+
+{% elif current_user.role == 'TENANT' %}
+<!-- TENANT MENU -->
+<div class="pure-menu">
+    <span class="pure-menu-heading">Glover</span>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('tenant.index') }}">Profile</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('tenant.bulletin') }}">Bulletin</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('auth.logout') }}">Logout</a>
+        </li>
+    </ul>
+</div>
+<!-- ------------------ -->
+
+
+{% else %}
+<!-- OWNER MENU -->
+<div class="pure-menu">
+    <span class="pure-menu-heading">Glover</span>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('owner.index') }}">Profile</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('owner.bulletin') }}">Bulletin</a>
+        </li>
+        <li class="pure-menu-item">
+            <a class="pure-menu-link" href="{{ url_for('auth.logout') }}">Logout</a>
+        </li>
+    </ul>
+</div>
+<!-- ------------------ -->
+
+
+{% endif %}
+{% endif %}

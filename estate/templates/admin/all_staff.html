@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -12,37 +12,48 @@
     </div>
     {% endfor %}
 
-    <div class="search-div">
-        <input type="text" onkeyup="search()" placeholder="Search for staff by name" id="searchBtn">
+    <div class="header">
+        <h1>All Staff Members</h1>
     </div>
 
-    <table class="u-full-width staff">
-        <caption>All Staff Members</caption>
-        <thead>
-            <tr>
-                <th>Staff ID</th>
-                <th>Role</th>
-                <th>Name</th>
-                <th>Is Active</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for st in staff %}
-            <tr class="{{st.first_name}}{{st.last_name}}{{st.middle_name}}">
-                <td>{{ st.username }}</td>
-                <td>{{ st.role }}</td>
-                <td>{{ st.first_name }} {{ st.middle_name }} {{ st.last_name }}</td>
-                {% if st.is_active %}
-                <td>✔</td>
-                {% else %}
-                <td>❌</td>
-                {% endif %}
-                <td><a href="{{ url_for('.edit_staff', id=st.id) }}" class="button button-primary">Edit</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="content">
+        <div class="search-bar">
+            <input type="text" onkeyup="search()" placeholder="Search for staff by name" id="searchBtn">
+        </div>
+
+        <table class="pure-table pure-table-horizontal mg-top-20">
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Role</th>
+                    <th>Name</th>
+                    <th>Is Active</th>
+                    <th>Is Resident</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for st in staff %}
+                <tr class="{{st.first_name}}{{st.last_name}}{{st.middle_name}}">
+                    <td>{{ st.username }}</td>
+                    <td>{{ st.role }}</td>
+                    <td>{{ st.first_name }} {{ st.middle_name }} {{ st.last_name }}</td>
+                    {% if st.is_active %}
+                    <td>✔</td>
+                    {% else %}
+                    <td>❌</td>
+                    {% endif %}
+                    {% if st.flats.all() == [] %}
+                    <td>❌</td>
+                    {% else %}
+                    <td>✔</td>
+                    {% endif %}
+                    <td><a href="{{ url_for('.edit_staff', id=st.id) }}" class="pure-button pure-button-primary">Edit</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

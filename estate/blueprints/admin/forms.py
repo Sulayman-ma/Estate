@@ -7,7 +7,7 @@ from wtforms.fields import (
     TelField,
     SubmitField,
     PasswordField,
-    RadioField
+    TextAreaField
 )
 from wtforms.validators import Email
 
@@ -82,5 +82,20 @@ class CreateUser(FlaskForm):
     role = SelectField(label="Role", choices=[
         'TENANT', 'OWNER'
     ])
-    # is_staff = BooleanField()
-    register = SubmitField(label='Create')
+    create = SubmitField(label='Create')
+
+
+class SendNotice(FlaskForm):
+    subject = StringField(label="Subjct", render_kw={
+        'placeholder': 'Message Subject',
+        'required': 'required'
+    }, description='Something random?')
+    message = TextAreaField(label='Notice Message', render_kw={
+        'placeholder': 'Type notice message...',
+        'required': 'required'
+    })
+    target = SelectField(label='Target Users', choices={
+        'ALL', 'TENANTS', 'OWNERS'
+    })
+    mail = BooleanField()
+    send = SubmitField(label='Send Notice')

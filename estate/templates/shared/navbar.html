@@ -1,7 +1,6 @@
 {% if current_user.is_authenticated %}
-    <!-- create three navs; ADMIN, OWNER, TENANT -->
-    {% if current_user.role == 'ADMIN' %}
-    <!-- ADMIN NAV BAR -->
+    create three navs; ADMIN, OWNER, TENANT
+    <!-- {% if current_user.role == 'ADMIN' %} -->
     <nav>
         <div class="u-pull-left">
             <a href="{{ url_for('admin.index') }}"></a>
@@ -13,8 +12,8 @@
             <li class="dropdown">
                 <a class="dropbtn">Staff &downarrow;</a>
                 <ul class="dropdown-content">
-                    <li><a href="{{ url_for('.all_staff') }}">All Staff</a></li>
-                    <li><a href="{{ url_for('.register_staff') }}">Register Staff</a></li>
+                    <li><a href="{{ url_for('admin.all_staff') }}">All Staff</a></li>
+                    <li><a href="{{ url_for('admin.register_staff') }}">Register Staff</a></li>
                 </ul>
             </li> 
             <li class="dropdown">
@@ -25,11 +24,14 @@
                     <li><a href="{{ url_for('admin.create_user') }}">Create User</a></li>
                 </ul>
             </li>
-            <!-- <li style="list-style: none;">
+            <li style="list-style: none;">
                 <a href="{{ url_for('admin.payments') }}">Payment History</a>
-            </li> -->
+            </li>
             <li style="list-style: none;">
                 <a href="{{ url_for('admin.flats') }}">Estate Flats</a>
+            </li>
+            <li style="list-style: none;">
+                <a href="{{ url_for('admin.send_notice') }}">Bulletin</a>
             </li>
             <li style="list-style: none;">
                 <a href="{{ url_for('auth.logout') }}">Logout</a>
@@ -47,6 +49,9 @@
             <div>
                 <li style="list-style: none;">
                     <a href="{{ url_for('tenant.index') }}">Profile</a>
+                </li>
+                <li style="list-style: none;">
+                    <a href="{{ url_for('tenant.bulletin') }}">Bulletin</a>
                 </li>
                 <li style="list-style: none;">
                     <a href="{{ url_for('auth.logout') }}">Logout</a>
@@ -67,6 +72,9 @@
                     <a href="{{ url_for('owner.index') }}">Profile</a>
                 </li>
                 <li style="list-style: none;">
+                    <a href="{{ url_for('owner.bulletin') }}">Bulletin</a>
+                </li>
+                <li style="list-style: none;">
                     <a href="{{ url_for('auth.logout') }}">Logout</a>
                 </li>
             </div>
@@ -74,4 +82,4 @@
     </nav>
 
     {% endif %}
-{% endif %}
+{% endif %} -->

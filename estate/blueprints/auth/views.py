@@ -62,7 +62,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user is not None and user.check_password(password):
             # with remember me token for 1 hour
-            login_user(user, remember=True, duration=timedelta(hours=1))
+            login_user(user, duration=timedelta(hours=1))
             next = request.args.get('next')
             endpoint = '{}.index'.format(user.role.lower())
             # generate user blueprint endpoint with role name

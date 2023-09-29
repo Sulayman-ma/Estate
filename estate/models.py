@@ -141,6 +141,12 @@ class Flat(db.Model):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
+    def check_expiry(self) -> None:
+        today = datetime.today().date()
+        if today >= self.lease_expiry:
+            self.rent_overdue = self.rent
+        db.session.commit()
+
     def __repr__(self) -> str:
         return '<Block {}, Flat {}>'.format(self.block, self.number)
     
@@ -165,3 +171,19 @@ class Flat(db.Model):
                 flat = Flat(number=number, block=block)
                 db.session.add(flat)
         db.session.commit()
+
+
+class Notice(db.Model):
+    __tablename__ = 'notices'
+
+    id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.String(128), nullable=False)
+    message = db.Column(db.Text(), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now())
+    target = db.Column(db.String(32), nullable=False)
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def __repr__(self) -> str:
+        return '<#{} - {}>'.format(self.id, self.subject)

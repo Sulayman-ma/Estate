@@ -13,13 +13,13 @@ from wtforms.validators import (
 
 class MakePayment(FlaskForm):
     amount = IntegerField(label='Rent Amount', render_kw={
-        'placeholder': 'Rent amount to pay'
+        'placeholder': 'Payment Amount'
     }, validators=[InputRequired()])
-    status = SelectField(label='Payment Status', choices={
-        'FULL', 'PARTIAL'
-    }, validators=[InputRequired()])
+    # status = SelectField(label='Payment Status', choices={
+    #     'FULL', 'PARTIAL'
+    # }, validators=[InputRequired()])
     password = PasswordField(label='Password', render_kw={
-        'placeholder': 'Please enter your password'
+        'placeholder': 'Enter password'
     }, validators=[InputRequired()])
     confirm = SubmitField(label='CONFIRM', render_kw={
         'class': 'button-primary'

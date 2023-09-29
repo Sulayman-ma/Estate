@@ -1,37 +1,70 @@
-{% extends "shared/base.html" %}
 
-{% block title %}Login{% endblock %}
 
-{% block content %}
-
-<div class="container">
-    <h2>Login</h2>
-    <hr>
-
-    <form method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
-       <!-- FLASH MESSAGES -->
-        {% for category, msg in get_flashed_messages(with_categories=True) %}
-        <div class="flash">
-            <span class="{{ category }}">{{ msg }}</span>
-        </div>
-        {% endfor %}
-
-        <div class="row">
-            <div class="column">
-                <label for="username">Username</label>
-                <input type="text" name="username" required placeholder="Username">
-            </div>
-        </div>
-        <div class="row">
-            <div class="column">
-                <label for="password">Password</label>
-                <input type="password" name="password" required placeholder="Password">
-            </div>
-        </div>
-        <input type="submit" value="Login">
-    </form>
+<!-- FLASH MESSAGES -->
+{% for category, msg in get_flashed_messages(with_categories=True) %}
+<div class="flash">
+    <span class="{{ category }}">{{ msg }}</span>
 </div>
+{% endfor %}
 
-{% endblock %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css')}}" type="text/css"> -->
+
+    <!-- PURE.CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/base-min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-custom.css') }}", type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_custom.css') }}", type="text/css">
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    <!-- Main Content -->
+    <div id="main" class="login">
+        <div class="header">
+            <h1>Login</h1>
+        </div>
+    
+        <div class="content">
+            <form method="post" class="pure-form pure-form-aligned">
+                <fieldset>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+                    <div class="pure-control-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" required placeholder="Username">
+                        <span class="error">*</span>
+                    </div>
+                    <div class="pure-control-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" required placeholder="Password">
+                        <span class="error">*</span>
+                    </div>
+                    <div class="pure-controls">
+                        <label for="remember-me" class="pure-checkbox">
+                            <input type="checkbox" name="remember_me" id="remember-me" />
+                            Remember me
+                        </label>
+                        <input type="submit" class="pure-button pure-button-primary" value="Login">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{url_for('static', filename='js/ui.js') }}"></script>
+</body>
+
+</html>

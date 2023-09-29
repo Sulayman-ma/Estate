@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -12,33 +12,43 @@
     </div>
     {% endfor %}
 
-    <h2>Flats for Rent</h2>
+    <div class="header">
+        <h1>Flats for Rent</h1>
+        <h2>Secure a new lease</h2>
+    </div>
 
-    <table class="u-full-width staff">
-        <thead>
-            <tr>
-                <th>Block</th>
-                <th>Flat</th>
-                <th>Owner (Email)</th>
-                <th>Rent Cost</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="content">
+        <div class="pure-g">
+            {% if flats != [] %}
+
             {% for flat in flats %}
-            <!-- flat for rent and currently not rented -->
-            {% if not flat.get_tenant() and flat.for_rent and flat.get_owner() %}
-            <tr>
-                <td>{{ flat.block }}</td>
-                <td>{{ flat.number }}</td>
-                <td>{{ flat.get_owner().email }}</td>
-                <td>{{ '₦ {:,}'.format(flat.rent) }}</td>
-                <td><a class="button button-primary" href="{{ url_for('.agreement', id=flat.id) }}">Process Lease</a></td>
-            </tr>
-            {% endif %}
+            <!-- one column for small screen, 2 columns for large and above -->
+            <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 flat-listing">
+                <h2 class="content-subhead">Block {{ flat.block }}, Flat {{ flat.number }}</h2>
+                <p>Owner - {{ flat.get_owner().email or None }}</p>
+                <p>Rent Amount - {{ '₦ {:,}'.format(flat.rent) }}</p>
+    
+                <!-- MANAGE RENT -->
+                {% if flat.get_tenant() %}
+                <button disabled class="pure-button">OCCUPIED</button>
+                {% elif flat.get_owner() == None or flat.rent == 0 %}
+                <button disabled class="pure-button">UNAVAILABLE</button>
+                {% else %}
+                <a class="pure-button pure-button-primary" href="{{ url_for('.pay_rent', id=flat.id) }}">PAY NOW</a>
+                {% endif %}
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+
+            {% else %}
+
+            <div class="pure-u-1">
+                <h1 class="content-subhead">Sorry, there are no flats currently available, check again later.</h1>
+                <a class="pure-button pure-button-primary" href="{{ url_for('.profile') }}">GO BACK</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

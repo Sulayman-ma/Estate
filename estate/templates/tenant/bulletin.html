@@ -1,0 +1,35 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Bulletin{% endblock %}
+
+{% block content %}
+
+<div id="main">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="pop-flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
+
+    <div class="header">
+        <h1>Bulletin</h1>
+        <h2>Estate news and announcements</h2>
+    </div>
+
+    <div class="content">
+        {% for msg in notices %}
+        <h2>
+            <a href="{{ url_for('admin.notice', id=msg.id) }}">{{ msg.subject }}</a>
+            [{{ msg.target }}]
+        </h2> 
+        <h4>
+            {{ msg.timestamp.strftime("%Y-%B-%d") }}, 
+            {{ msg.timestamp.strftime("%H:%M") }}
+        </h4>
+        <p>{{ msg.message[:200] }}... <a href="{{ url_for('admin.notice', id=msg.id) }}">Read More</a></p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock%}

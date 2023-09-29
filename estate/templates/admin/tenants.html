@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -12,51 +12,56 @@
     </div>
     {% endfor %}
 
-    <div class="search-div">
-        <input type="text" onkeyup="search()" placeholder="Search for tenant by name" id="searchBtn">
+    <div class="header">
+        <h1>Estate Tenants</h1>
     </div>
 
-    <table class="u-full-width staff">
-        <caption>Estate Tenants</caption>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Flats Rented</th>
-                <th>Years Overdue</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for t in tenants %}
-            <tr class="{{t.username}}">
-                <td>{{ t.username }}</td>
-                <td>{{ t.email }}</td>
-                <!-- print separated in case of multiple or use select -->
-                <td>
-                    {% if t.flats.all() != [] %}
-                    {% for flat in t.flats.all() %}
-                        <li>Block {{ flat.block }}, Flat {{ flat.number }}</li>
-                    {% endfor %}
-                    {% else %}
-                    NO FLATS RENTED
-                    {% endif %}
-                </td>
-                <td>
-                    {% if t.flats.all() != [] %}
-                    {% for f in t.flats.all() %}
-                        {% if year > f.lease_expiry.year %}
-                        <li>{{ year - f.lease_expiry.year }}</li>
+    <div class="content">
+        <div class="search-div">
+            <input type="text" onkeyup="search()" placeholder="Search for tenant by name" id="searchBtn">
+        </div>
+
+        <table class="pure-table pure-table-horizontal mg-top-20 pure-table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Flats Rented</th>
+                    <th>Years Overdue</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tenants %}
+                <tr class="{{t.username}}">
+                    <td>{{ t.username }}</td>
+                    <td>{{ t.email }}</td>
+                    <!-- print separated in case of multiple or use select -->
+                    <td>
+                        {% if t.flats.all() != [] %}
+                        {% for flat in t.flats.all() %}
+                            <li style="list-style-type: none;">Block {{ flat.block }}, Flat {{ flat.number }}</li>
+                        {% endfor %}
                         {% else %}
-                        <li>0</li>
+                        NO FLATS RENTED
                         {% endif %}
-                    {% endfor %}
-                    {% else %}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    </td>
+                    <td>
+                        {% if t.flats.all() != [] %}
+                        {% for f in t.flats.all() %}
+                            {% if f.rent_overdue == 0 and today < f.lease_expiry %}
+                            <li style="list-style-type: none;" class="success">FULLY PAID</li>
+                            {% else %}
+                            <li style="list-style-type: none;" class="error">{{ '₦ {:,}'.format(f.rent_overdue) }}</li>
+                            {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

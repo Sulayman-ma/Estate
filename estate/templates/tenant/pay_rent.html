@@ -4,38 +4,45 @@
 
 {% block content %}
 
-<div class="container">
-    <form method="POST">
-        <!-- FLASH MESSAGES -->
-        {% for category, msg in get_flashed_messages(with_categories=True) %}
-        <div class="pop-flash">
-            <span class="{{ category }}">{{ msg }}</span>
-        </div>
-        {% endfor %}
+<div id="main">
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="pop-flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
 
-        <h2 class="stats">Pay Rent</h2>
-        <hr>
-        {{ form.hidden_tag() }}
+    <div class="header">
+        <h1>Pay Rent</h1>
+        <h2>Make a full or partial rent payment now.</h2>
+    </div>
 
-        <p>Rent amount is {{ '₦ {:,}'.format(rent) }}, you may pay partially or fully. Partial payments must be completed before the next payment is due. Terms & Conditions apply.</p>
-        <div class="row stats">
-            {{ form.amount.label }}
-            {{ form.amount() }}
-        </div>
-        <div class="row stats">
-            {{ form.password.label }}
-            {{ form.password() }}
-        </div>
-        <div class="row stats">
-            {{ form.status.label }}
-            {{ form.status() }}
-        </div>
-        <div class="row stats">
-            {{ form.confirm() }}
-        </div>
-    </form>
+    <div class="content">
+        <form method="POST" onsubmit="checkRent()" class="pure-form pure-form-aligned">
+            {{ form.hidden_tag() }}
+    
+            <p>Rent amount is {{ '₦ {:,}'.format(rent) }}, you may pay partially or fully. Partial payments must be completed before the next payment is due. Terms & Conditions apply.</p>
+            {% if flat.rent_overdue > 0 %}
+            <span class="error">Overdue - {{ '₦ {:,}'.format(flat.rent_overdue) }}</span>
+            {% endif %}
 
-    <a class="button" href="{{ url_for('.flats_for_rent') }}"><< Back to Flats</a>
+            <div class="pure-control-group">
+                {{ form.amount.label }}
+                {{ form.amount(max='{{ flat.rent }}') }}
+            </div>
+            <div class="pure-control-group">
+                {{ form.password.label }}
+                {{ form.password() }}
+            </div>
+            <div class="pure-controls">
+                {{ form.confirm(class='pure-button pure-button-primary') }}
+            </div>
+        </form>
+    </div>
+
+    <div class="content">
+        <a class="pure-button pure-button-primary" href="{{ url_for('.flats_for_rent') }}"><< Back to Flats</a>
+    </div>
 </div>
 
 {% endblock %}

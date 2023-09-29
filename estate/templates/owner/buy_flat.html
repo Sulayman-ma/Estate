@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <form method="post">
         {{ form.hidden_tag() }}
 
@@ -14,13 +14,13 @@
             <span class="{{ category }}">{{ msg }}</span>
         </div>
         {% endfor %}
-        <h4 class="stats">Confirm Password</h4>
+        <h4 class="center">Confirm Password</h4>
         <hr>
-        <div class="row stats">
+        <div class="row center">
             {{ form.password.label }}
             {{ form.password() }}
         </div>
-        <div class="row stats">
+        <div class="row center">
             {{ form.confirm() }}
         </div>
     </form>

@@ -3,18 +3,21 @@ from ... import db
 from ...decorators import role_required
 from ...models import (
     User,
-    Flat
+    Flat,
+    Notice
 )
 from .forms import (
     RegisterStaff,
     EditStaffInfo,
-    CreateUser
+    CreateUser,
+    SendNotice
 )
 from flask import (
     render_template,
     redirect,
     url_for,
-    flash
+    flash,
+    current_app
 )
 from flask_login import (
     login_required
@@ -29,7 +32,8 @@ from datetime import datetime
 @login_required
 @role_required('ADMIN')
 def index():
-    return render_template('admin/dash.html')
+    staff = User.get_users('staff').all()
+    return render_template('admin/dash.html', staff=staff)
 
 
 @admin.route('/admin/all_staff')
@@ -112,7 +116,9 @@ def edit_staff(id):
 @login_required
 @role_required('ADMIN')
 def payments():
-    # payments = Payment.query.all()
+    transaction = current_app.config.get('API_OBJECT')
+    # fetch all successful transactions from Paystack dashboard
+    payments = transaction.list(status='success')
     # TODO: paginate the payments
 
     # TODO: provide filters for search by; Username, date/dates range
@@ -163,9 +169,10 @@ def create_user():
 @role_required('ADMIN')
 def tenants():
     tenants = User.get_users('tenant')
+    today = datetime.today().date()
     # TODO: paginate the template
     # TODO: add filters for search
-    return render_template('admin/tenants.html', tenants=tenants, year=datetime.today().year)
+    return render_template('admin/tenants.html', tenants=tenants, today=today)
 
 
 @admin.route('/admin/owners')
@@ -176,3 +183,39 @@ def owners():
     # TODO: paginate the template
     # TODO: add filters for search
     return render_template('admin/owners.html', owners=owners)
+
+
+@admin.route('/admin/send_notice', methods=['GET', 'POST'])
+@login_required
+@role_required('ADMIN')
+def send_notice():
+    """Send bulletin notice to all users, tenants or owners.
+    
+    Return: Notice template with form for a new notice.
+    """
+    form = SendNotice()
+    notices = Notice.query.all()
+    if form.validate_on_submit():
+        try:
+            notice = Notice(
+                subject=form.subject.data, 
+                message=form.message.data, 
+                target = form.target.data
+            )
+            db.session.add(notice)
+            db.session.commit()
+            # TODO: add mailing feature
+        except:
+            flash('⚠ An error has occured, please try again.', 'error')
+            return redirect(url_for('.send_notice'))
+        flash('Notice sent ✔', 'info')
+        return redirect(url_for('.send_notice'))
+    return render_template('admin/send_notice.html', form=form, notices=notices)
+
+
+@admin.route('/admin/notice/<int:id>')
+@login_required
+@role_required('ADMIN')
+def notice(id):
+    notice = Notice.query.get(id)
+    return render_template('admin/notice.html', notice=notice)
