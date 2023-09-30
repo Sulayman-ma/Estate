@@ -61,6 +61,24 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
     background-size: auto;
 }
 
+.login {
+    width: 70%;
+    margin: auto;
+}
+
+/* small screens */
+@media (max-width: 568px) {
+    .login {
+        width: 100%;
+    }
+}
+/* medium screens */
+@media (max-width: 920px) {
+    .login {
+        width: 90%;
+        margin: auto;
+    }
+}
 /* ----------------------------------------------- */
 
 
