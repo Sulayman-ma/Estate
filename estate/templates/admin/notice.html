@@ -5,11 +5,14 @@
 {% block content %}
 
 <div id="main">
-    <h1>{{ notcie.subject }}</h1>
-    <hr>
+    <div class="header">
+        <h1>{{ notice.subject }}</h1>
+    </div>
 
-    <p>{{ notice.message }}</p>
-    <a href="{{ url_for('.send_notice') }}">Go back</a>
+    <div class="content">
+        <p>{{ notice.message }}</p>
+        <!-- <a href="{{ url_for('.send_notice') }}">Go back</a> -->
+    </div>
 </div>
 
 {% endblock %}

@@ -32,7 +32,7 @@ class ModifyFlat(FlaskForm):
 
 class ConfirmPassword(FlaskForm):
     password = PasswordField(label='Password', render_kw={
-        'placeholder': 'Please enter your password'
+        'placeholder': 'Enter your password'
     }, validators=[InputRequired()])
     confirm = SubmitField(label='CONFIRM', render_kw={
         'class': 'button-primary'

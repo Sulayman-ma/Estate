@@ -215,7 +215,7 @@ def send_notice():
 
 @admin.route('/admin/notice/<int:id>')
 @login_required
-@role_required('ADMIN')
+# @role_required('ADMIN')
 def notice(id):
     notice = Notice.query.get(id)
     return render_template('admin/notice.html', notice=notice)

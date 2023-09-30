@@ -35,13 +35,13 @@
                 {{ form.password() }}
             </div>
             <div class="pure-controls">
-                {{ form.confirm(class='pure-button pure-button-primary') }}
+                {{ form.confirm(class='pure-button pure-button-primary submit general') }}
             </div>
         </form>
     </div>
 
     <div class="content">
-        <a class="pure-button pure-button-primary" href="{{ url_for('.flats_for_rent') }}"><< Back to Flats</a>
+        <a class="pure-button pure-button-primary general" href="{{ url_for('.flats_for_rent') }}"><< Back to Flats</a>
     </div>
 </div>
 

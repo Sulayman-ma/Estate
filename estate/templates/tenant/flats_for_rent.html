@@ -28,13 +28,12 @@
                 <p>Owner - {{ flat.get_owner().email or None }}</p>
                 <p>Rent Amount - {{ '₦ {:,}'.format(flat.rent) }}</p>
     
-                <!-- MANAGE RENT -->
                 {% if flat.get_tenant() %}
-                <button disabled class="pure-button">OCCUPIED</button>
+                <button disabled class="general pure-button">OCCUPIED</button>
                 {% elif flat.get_owner() == None or flat.rent == 0 %}
-                <button disabled class="pure-button">UNAVAILABLE</button>
+                <button disabled class="general pure-button">UNAVAILABLE</button>
                 {% else %}
-                <a class="pure-button pure-button-primary" href="{{ url_for('.pay_rent', id=flat.id) }}">PAY NOW</a>
+                <a class="general action pure-button pure-button-primary" href="{{ url_for('.agreement', id=flat.id) }}">PAY NOW</a>
                 {% endif %}
             </div>
             {% endfor %}
@@ -43,7 +42,7 @@
 
             <div class="pure-u-1">
                 <h1 class="content-subhead">Sorry, there are no flats currently available, check again later.</h1>
-                <a class="pure-button pure-button-primary" href="{{ url_for('.profile') }}">GO BACK</a>
+                <a class="general pure-button pure-button-primary" href="{{ url_for('.index') }}">GO BACK</a>
             </div>
             {% endif %}
         </div>

@@ -5,58 +5,49 @@
 {% block content %}
 
 <div id="main">
-    <!-- MAIN CONTENT -->
-    <h2>Modify Flat</h2>
-    <hr>
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="pop-flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
 
-    <form method="POST">
-        {{ form.hidden_tag() }}
+    <div class="header">
+        <h1>Modify Flat</h1>
+    </div>
 
-        <!-- FLASH MESSAGES -->
-        {% for category, msg in get_flashed_messages(with_categories=True) %}
-        <div class="pop-flash">
-            <span class="{{ category }}">{{ msg }}</span>
-        </div>
-        {% endfor %}
+    <div class="content">
+        <form method="POST" class="pure-form pure-form-stacked">
+            <fieldset>
 
-        <div class="row">
-            <div class="four columns">
+            </fieldset>
+            {{ form.hidden_tag() }}
+    
+            <div class="pure-controls">
                 <label>
                     <span>For Rent</span>
                     {{ form.for_rent() }}
                 </label>
+                {{ form.rent.label}}
+                {{ form.rent(class='pure-u-3-8')}}
             </div>
-            <div class="four columns">
+            <div class="pure-controls">
                 <label>
                     <span>For Sale</span>
                     {{ form.for_sale() }}
                 </label>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="four columns">
-                {{ form.rent.label}}
-                {{ form.rent(class='u-full-width')}}
-            </div>
-            <div class="four columns">
                 {{ form.cost.label }}
-                {{ form.cost(class='u-full-width') }}
+                {{ form.cost(class='pure-u-3-8') }}
             </div>
-        </div>
-
-        <div class="row">
-            <div class="eight columns">
+            <!-- <div class="pure-control-group">
                 {{ form.description.label }}
-                {{ form.description(class='u-full-width') }}
+                {{ form.description(class='pure-u-23-24') }}
+            </div> -->
+            <div class="pure-controls">
+                {{ form.save(class='general submit pure-button pure-button-primary') }}
             </div>
-        </div>
-        <div class="row">
-            <div class="search-div">
-                {{ form.save(class='button-primary') }}
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

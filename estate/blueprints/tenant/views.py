@@ -47,11 +47,13 @@ def agreement(id: int):
     id -- Flat id
     Return: Agreement template and redirect to the rent payment page.
     """
+    flat = Flat.query.get(id)
+    today = datetime.today().date()
     # agreeing to terms and conditions when securing lease
     if request.method == 'POST' and request.form.get('agree') is not None:
         # redirect to profile completion for new users
         return redirect(url_for('.pay_rent', id=id))
-    return render_template('tenant/agreement.html')
+    return render_template('tenant/agreement.html', flat=flat, today=today)
 
 
 @tenant.route('/tenant/bulletin')
@@ -59,8 +61,8 @@ def agreement(id: int):
 @role_required('TENANT')
 def bulletin():
     """ Show list of all notices for Tenants """
-    notices = Notice.query.all()
-    return render_template('tenant/bulletin.html', notices=notices)
+    notices = Notice.query.filter_by(target='TENANTS').all()
+    return render_template('shared/bulletin.html', notices=notices)
 
 
 @tenant.route('/tenant/flats_for_rent')
@@ -70,6 +72,18 @@ def flats_for_rent():
     """ Display all flats available for rent. """
     flats = Flat.query.all()
     return render_template('tenant/flats_for_rent.html', flats=flats)
+
+
+@tenant.route('/tenant/terminate/<int:id>')
+@login_required
+@role_required('TENANT')
+def terminate(id):
+    """ Terminate lease. """
+    flat = Flat.query.get(id)
+    current_user.flats.remove(flat)
+    db.session.commit()
+    flash('Lease terminated for Block {}, Flat {}'.format(flat.block, flat.number))
+    return redirect(url_for('.index'))
 
 
 @tenant.route('/tenant/pay_rent/<int:id>', methods=['GET', 'POST'])

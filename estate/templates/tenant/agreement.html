@@ -5,33 +5,6 @@
 {% block content %}
 
 <div id="main">
-    <!-- MAIN CONTENT -->
-    <div class="lease-title">
-        <h2>TERMS AND CONDITIONS</h2>
-    </div>
-
-    <hr>
-
-    <p>This Lease Agreement (the "Agreement") is entered into between the Lessor (the "Flat Owner"), Lessee (the "Tenant") and the Management (the estate management) on [DATE].</p>
-
-    <ol style="list-style: number;">
-        <li>Property: The Owner agrees to lease to the Tenant, and the Tenant agrees to rent from the Owner, the following property:
-            <ul>
-                <li> Description: Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-                <li>Condition: The property is provided in its current condition unless otherwise specified in writing.</li>
-            </ul>
-        </li>
-        <li>Lease Term: The lease term will be for [TERM] starting on [START DATE] and ending on [END DATE].</li>
-        <li>Rent Payment: The Tenant agrees to pay rent in the amount of [RENT AMOUNT], payable [MONTHLY/QUARTERLY], on or before the [DUE DATE], to the Owner or as otherwise instructed.</li>
-        <li>Security Deposit: The Tenant will provide a security deposit of [SECURITY DEPOSIT AMOUNT] to the Management upon signing this Agreement. The deposit will be held as security for any damages, unpaid rent, or other obligations as outlined in this Agreement.</li>
-        <li>Maintenance and Repairs: The Tenant agrees to maintain the property in good condition, and to promptly report any damages or necessary repairs to the Management. The Management will be responsible for major repairs and structural issues.</li>
-        <li>Termination: Either party may terminate this Agreement with written notice of [NOTICE PERIOD] days prior to the desired termination date.</li>
-        <li>Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes any prior understandings or agreements, whether oral or written.</li>
-        <li>Severability: If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall remain in full force and effect.</li>
-    </ol>
-
-    <hr>
-
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -39,17 +12,43 @@
     </div>
     {% endfor %}
 
-    <form action="" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        The party (Tenant) acknowledges and agrees to the terms of this Lease Agreement:
-        <div class="u-pull-right">
-            <label for="">
-                <input type="checkbox" name="agree" required>
-                <span>Tenant</span>
-            </label>
-            <input type="submit" class="button-primary" value="AGREE TO TERMS & CONDITIONS">
-        </div>
-    </form>
+    <div class="header">
+        <h1>Terms & Conditions</h1>
+        <h2>Read and accept the terms and conditions before proceeding</h2>
+    </div>
+
+    <div class="content">
+        <h2 class="content-subhead">This Lease Agreement (the "Agreement") is entered into between the Lessor (the "Flat Owner"), Lessee (the "Tenant") and the Management (the estate management) on <span class="info">{{ today }}</span>.</h2>
+        <ol style="list-style: number;">
+            <li>Property: The Owner agrees to lease to the Tenant, and the Tenant agrees to rent from the Owner, the following property:
+                <ul>
+                    <li> Description: Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+                    <li>Condition: The property is provided in its current condition unless otherwise specified in writing.</li>
+                </ul>
+            </li>
+            <li>Lease Term: The lease term will be for [TERM] starting on <span class="info">{{ today }}</span> and ending on [END DATE].</li>
+            <li>Rent Payment: The Tenant agrees to pay rent in the amount of <span class="info">{{ '₦ {:,}'.format(flat.rent) }}</span>, payable [MONTHLY/QUARTERLY], on or before the [DUE DATE], to the Owner or as otherwise instructed.</li>
+            <li>Security Deposit: The Tenant will provide a security deposit of [SECURITY DEPOSIT AMOUNT] to the Management upon signing this Agreement. The deposit will be held as security for any damages, unpaid rent, or other obligations as outlined in this Agreement.</li>
+            <li>Maintenance and Repairs: The Tenant agrees to maintain the property in good condition, and to promptly report any damages or necessary repairs to the Management. The Management will be responsible for major repairs and structural issues.</li>
+            <li>Termination: Either party may terminate this Agreement with written notice of [NOTICE PERIOD] days prior to the desired termination date.</li>
+            <li>Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes any prior understandings or agreements, whether oral or written.</li>
+            <li>Severability: If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall remain in full force and effect.</li>
+        </ol>
+    </div>
+
+    <div class="content">
+        <form method="post" class="pure-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            The party (Tenant) acknowledges and agrees to the terms of this Purchase Agreement:
+            <div class="pure-controls">
+                <input type="checkbox" name="agree" id="agree" required>
+                <label for="agree">Tenant</label>
+            </div>
+            <div class="pure-controls center">
+                <input type="submit" class="general submit pure-button pure-button-primary" value="AGREE TO TERMS & CONDITIONS">
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

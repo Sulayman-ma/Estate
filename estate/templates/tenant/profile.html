@@ -18,8 +18,7 @@
     <div class="header">
         <h1>Tenant Profile</h1>
         <h2>Welcome! Manage your leases and edit personal information.</h2>
-        <a class="pure-button pure-button-primary mg-bot-20" href="{{ url_for('auth.edit_profile', id=current_user.id) }}">EDIT PROFILE</a>
-        <a class="pure-button pure-button-primary mg-bot-20" href="{{ url_for('.flats_for_rent') }}">NEW LEASE</a>
+        <a class="pure-button pure-button-primary mg-bot-20 general" href="{{ url_for('auth.edit_profile', id=current_user.id) }}">EDIT PROFILE</a>
     </div>
 
     <div class="content wide-content">
@@ -30,27 +29,28 @@
             <!-- one column for small screen, 2 columns for large and above -->
             <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 wide-content">
                 <h2 class="content-subhead">Block {{ flat.block }}, Flat {{ flat.number }}</h2>
-                <p>Lease Start - {{ flat.lease_start }}</p>
-                <p>Lease Expiry - {{ flat.lease_expiry }}</p>
-                <p>Owner - {{ flat.get_owner().email or None }}</p>
-                <p>Rent Amount - {{ '₦ {:,}'.format(flat.rent) }}</p>
-    
-                <!-- RENT PAYMENT STATUS -->
-                <!-- if overdue = 0 and next paymet is not due -->
-                {% if flat.rent_overdue == 0 and today < flat.lease_expiry %}
-                <p class="success">FULLY PAID</p>
+                <p>
+                    Lease Start - <span class="success">{{ flat.lease_start }}</span>
+                </p>
+                <p>
+                    Lease Expiry - <span class="error">{{ flat.lease_expiry }}</span>
+                </p>
+                <p>
+                    Owner - <a href="mailto:{{ flat.get_owner().email }}">{{ flat.get_owner().email or None }}</a>
+                </p>
+                <p>Rent Amount - <span class="misc">{{ '₦ {:,}'.format(flat.rent) }}</span></p>
+
+                <!-- RENT PAYMENT -->
                 <!-- if overdue > 0 or next payment is due -->
-                {% elif flat.rent_overdue > 0 or today >= flat.lease_expiry %}
+                {% if flat.rent_overdue > 0 or today >= flat.lease_expiry %}
                 <p class="error">Overdue - {{ '₦ {:,}'.format(flat.rent_overdue) }}</p>
+                <a class="pure-button pure-button-primary action general" href="{{ url_for('.pay_rent', id=flat.id) }}">PAY NOW</a>
+                {% else %}
+                <p class="success">FULLY PAID</p>
+                <button disabled class="general pure-button">PAY NOW</button>
                 {% endif %}
-    
-                <!-- MANAGE RENT -->
-                {% if flat.rent_overdue == 0 and today < flat.lease_expiry %}
-                <button disabled class="pure-button">PAID</button>
-                {% elif flat.rent_overdue > 0 or today >= flat.lease_expiry %}
-                <a class="pure-button pure-button-primary" href="{{ url_for('.pay_rent', id=flat.id) }}">PAY NOW</a>
-                {% endif %}
-                <a href="#" class="pure-button pure-button-primary button-error">TERMINATE</a>
+
+                <a href="{{ url_for('.terminate', id=flat.id) }}" class="pure-button pure-button-primary button-error terminate general">TERMINATE</a>
             </div>
             {% endfor %}
 
@@ -58,7 +58,7 @@
 
             <div class="pure-u-1">
                 <h1 class="content-subhead">Sorry, you currently have no leases. Secure one now.</h1>
-                <a class="pure-button pure-button-primary" href="{{ url_for('.flats_for_rent') }}">NEW LEASE</a>
+                <a class="pure-button pure-button-primary action general" href="{{ url_for('.flats_for_rent') }}">NEW LEASE</a>
             </div>
 
             {% endif %}

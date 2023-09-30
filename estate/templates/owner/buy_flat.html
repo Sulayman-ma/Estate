@@ -5,27 +5,31 @@
 {% block content %}
 
 <div id="main">
-    <form method="post">
-        {{ form.hidden_tag() }}
+    <!-- FLASH MESSAGES -->
+    {% for category, msg in get_flashed_messages(with_categories=True) %}
+    <div class="pop-flash">
+        <span class="{{ category }}">{{ msg }}</span>
+    </div>
+    {% endfor %}
 
-       <!-- FLASH MESSAGES -->
-        {% for category, msg in get_flashed_messages(with_categories=True) %}
-        <div class="pop-flash">
-            <span class="{{ category }}">{{ msg }}</span>
-        </div>
-        {% endfor %}
-        <h4 class="center">Confirm Password</h4>
-        <hr>
-        <div class="row center">
-            {{ form.password.label }}
-            {{ form.password() }}
-        </div>
-        <div class="row center">
-            {{ form.confirm() }}
-        </div>
-    </form>
+    <div class="header">
+        <h1 class="center">Confirm Password</h1>
+    </div>
 
-    <a class="button" href="{{ url_for('.flats_on_sale') }}"><< Back to Flats</a>
+    <div class="content mg-top-20">
+        <form method="post" class="pure-form pure-form-aligned">
+            {{ form.hidden_tag() }}        
+    
+            <div class="pure-control-group">
+                {{ form.password.label }}
+                {{ form.password(class='pure-u-10-24 pure-u-md-5-8') }}
+            </div>
+            <div class="pure-controls">
+                {{ form.confirm(class='general submit pure-button pure-button-primary') }}
+            </div>
+            <a class="general pure-button" href="{{ url_for('.flats_on_sale') }}"><< Back to Flats</a>
+        </form>
+    </div>
 </div>
 
 {% endblock %}
