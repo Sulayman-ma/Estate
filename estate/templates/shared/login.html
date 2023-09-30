@@ -1,14 +1,3 @@
-
-
-<!-- FLASH MESSAGES -->
-{% for category, msg in get_flashed_messages(with_categories=True) %}
-<div class="flash">
-    <span class="{{ category }}">{{ msg }}</span>
-</div>
-{% endfor %}
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,6 +21,13 @@
 <body>
     <!-- Main Content -->
     <div id="main" class="login">
+        <!-- FLASH MESSAGES -->
+        {% for category, msg in get_flashed_messages(with_categories=True) %}
+        <div class="pop-flash">
+            <span class="{{ category }}">{{ msg }}</span>
+        </div>
+        {% endfor %}
+
         <div class="header">
             <h1>Login</h1>
         </div>
@@ -44,19 +40,17 @@
                     <div class="pure-control-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" required placeholder="Username">
-                        <span class="error">*</span>
                     </div>
                     <div class="pure-control-group">
                         <label for="password">Password</label>
                         <input type="password" name="password" required placeholder="Password">
-                        <span class="error">*</span>
                     </div>
                     <div class="pure-controls">
                         <label for="remember-me" class="pure-checkbox">
                             <input type="checkbox" name="remember_me" id="remember-me" />
                             Remember me
                         </label>
-                        <input type="submit" class="general pure-button pure-button-primary" value="Login">
+                        <input type="submit" class="pure-button pure-button-primary" value="Login">
                     </div>
                 </fieldset>
             </form>
