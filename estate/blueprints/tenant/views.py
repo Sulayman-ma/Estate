@@ -1,7 +1,7 @@
 from . import tenant
 from ... import db
 from ...decorators import role_required
-from ...models import Flat
+from ...models import Flat, User, Notice
 from .forms import MakePayment
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -30,7 +30,11 @@ def index():
         # direct new users to terms and conditions agreement
         # return redirect(url_for('.agreement'))
     # flash('hiiii its me flash', 'success')
-    return render_template('tenant/profile.html')
+    today = datetime.today().date()
+    flats = current_user.flats.all()
+    for flat in flats:
+        flat.check_expiry()
+    return render_template('tenant/profile.html', today=today, flats=flats)
 
 
 @tenant.route('/tenant/agreement/<int:id>', methods=['GET', 'POST'])
@@ -43,11 +47,22 @@ def agreement(id: int):
     id -- Flat id
     Return: Agreement template and redirect to the rent payment page.
     """
+    flat = Flat.query.get(id)
+    today = datetime.today().date()
     # agreeing to terms and conditions when securing lease
     if request.method == 'POST' and request.form.get('agree') is not None:
         # redirect to profile completion for new users
         return redirect(url_for('.pay_rent', id=id))
-    return render_template('tenant/agreement.html')
+    return render_template('tenant/agreement.html', flat=flat, today=today)
+
+
+@tenant.route('/tenant/bulletin')
+@login_required
+@role_required('TENANT')
+def bulletin():
+    """ Show list of all notices for Tenants """
+    notices = Notice.query.filter_by(target='TENANTS').all()
+    return render_template('shared/bulletin.html', notices=notices)
 
 
 @tenant.route('/tenant/flats_for_rent')
@@ -57,6 +72,18 @@ def flats_for_rent():
     """ Display all flats available for rent. """
     flats = Flat.query.all()
     return render_template('tenant/flats_for_rent.html', flats=flats)
+
+
+@tenant.route('/tenant/terminate/<int:id>')
+@login_required
+@role_required('TENANT')
+def terminate(id):
+    """ Terminate lease. """
+    flat = Flat.query.get(id)
+    current_user.flats.remove(flat)
+    db.session.commit()
+    flash('Lease terminated for Block {}, Flat {}'.format(flat.block, flat.number))
+    return redirect(url_for('.index'))
 
 
 @tenant.route('/tenant/pay_rent/<int:id>', methods=['GET', 'POST'])
@@ -78,6 +105,10 @@ def pay_rent(id: int):
         if current_user.check_password(form.password.data) is False:
             flash('Incorrect password', 'error')
             return redirect(url_for('.pay_rent', id=id))
+        # validate rent amount to ensure it is within bounds
+        if form.amount.data > flat.rent:
+            flash('Rent cannot exceed the agreed upon price of ₦ {:,}'.format(flat.rent), 'warning')
+            return redirect(url_for('.pay_rent', id=id))
         # paystack transaction object
         transaction = current_app.config.get('API_OBJECT')
         # initialize transaction
@@ -92,7 +123,7 @@ def pay_rent(id: int):
         session['payment_amount'] = form.amount.data
         # redirect user to payment url 
         return redirect(response.get('authorization_url'))
-    return render_template('tenant/pay_rent.html', form=form, rent=rent)
+    return render_template('tenant/pay_rent.html', form=form, rent=rent, flat=flat)
 
 
 @tenant.route('/tenant/renew_rent/<int:id>')
@@ -113,7 +144,7 @@ def renew_rent(id: int):
     if status is True:
         # set overdue rent amount
         amount = session.pop('payment_amount')
-        flat.rent_overdue = flat.rent - amount
+        flat.rent_overdue -= amount
 
         # payment_status = session.pop('payment_status')
 
@@ -132,8 +163,8 @@ def renew_rent(id: int):
             current_user.flats.add(flat)
             flat.lease_start = datetime.today()
             flat.lease_expiry = flat.lease_start + relativedelta(years=1)
-        # else extend rent expiry
-        else:
+        # else extend rent expiry upon full payment
+        if flat.rent_overdue == 0:
             flat.lease_expiry = flat.lease_expiry + relativedelta(years=1)
         db.session.commit()
         session.pop('reference')

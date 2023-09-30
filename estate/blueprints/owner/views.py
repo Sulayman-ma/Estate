@@ -2,7 +2,11 @@ from . import owner
 from .forms import ModifyFlat, ConfirmPassword
 from ... import db
 from ...decorators import role_required
-from ...models import Flat
+from ...models import (
+    User,
+    Flat,
+    Notice
+)
 from flask_login import (
     login_required,
     current_user
@@ -18,6 +22,7 @@ from flask import (
 )
 from sqlalchemy.exc import IntegrityError
 from wtforms import ValidationError
+from datetime import datetime
 
 
 
@@ -30,18 +35,31 @@ def index():
         # direct new users to terms and conditions agreement
         # return redirect(url_for('.agreement'))
     # flash('hiiii its me flash', 'success')
-    return render_template('owner/profile.html')
+    flats = current_user.flats.all()
+    today = datetime.today().date()
+    return render_template('owner/profile.html', flats=flats, today=today)
 
 
 @owner.route('/owner/agreement/<int:id>', methods=['GET', 'POST'])
 @login_required
 @role_required('OWNER')
 def agreement(id):
+    flat = Flat.query.get(id)
+    today = datetime.today().date()
     # agreeing to terms and conditions and stuff
     if request.method == 'POST' and request.form.get('agree') is not None:
         # redirect to profile completion for new users
         return redirect(url_for('.buy_flat', id=id))
-    return render_template('owner/agreement.html')
+    return render_template('owner/agreement.html', flat=flat, today=today)
+
+
+@owner.route('/owner/bulletin')
+@login_required
+@role_required('OWNER')
+def bulletin():
+    """ Show list of all notices for Tenants """
+    notices = Notice.query.filter_by(target='OWNERS').all()
+    return render_template('shared/bulletin.html', notices=notices)
 
 
 @owner.route('/owner/modify_flat/<int:id>', methods=['GET', 'POST'])

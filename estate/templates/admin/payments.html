@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -12,34 +12,34 @@
     </div>
     {% endfor %}
 
-    <h2>Payment Records</h2>
+    <div class="header">
+        <h1>Payment Records</h1>
+    </div>
 
-    <table class="u-full-width staff">
-        <thead>
-            <tr>
-                <th>Flat ID</th>
-                <th>Tenant Username</th>
-                <th>Payment Type</th>
-                <th>Year</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for payment in payments %}
-            <tr>
-                <td>{{ payment.flat_id }}</td>
-                <td>{{ payment.username }}</td>
-                <td>{{ payment.type }}</td>
-                <td>{{ payment.year }}</td>
-                <td>{{ '₦ {:,}'.format(payment.amount) }}</td>
-                <td>{{ payment.timestamp }}</td>
-                <td>{{ payment.status }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="content wide-content">
+        <table class="pure-table pure-table-horizontal pure-table-striped mg-top-20">
+            <thead>
+                <tr>
+                    <th>User Email</th>
+                    <th>Payment Reference</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.customer.email }}</td>
+                    <td>{{ payment.reference }}</td>
+                    <td>{{ '₦ {:,}'.format(payment.amount/100) }}</td>
+                    <td>{{ payment.paid_at }}</td>
+                    <td>{{ payment.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

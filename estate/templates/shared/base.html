@@ -6,27 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}", type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css')}}" type="text/css">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css')}}" type="text/css"> -->
+
+    <!-- PURE.CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/base-min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-custom.css') }}", type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_custom.css') }}", type="text/css">
+
     <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body>
-    <header>
-        {% include 'shared/navbar.html' %}
-    </header>
-    <main>
-        <!-- Main content -->
+    <!-- MAIN PARENT DIV -->
+    <div id="layout">
+        <a href="#menu" id="menuLink" class="menu-link">
+            <!-- Hamburger icon -->
+            <span></span>
+        </a>
+
+        <!-- Side Menu -->
+        <div id="menu">
+            {% include 'shared/menu.html' %}
+        </div>
+
+        <!-- Main Content -->
         {% block content %}
         {% endblock %}
-    </main>
-    {#
-    <footer>
-        <!-- Footer -->
-        {% include 'shared/footer.html' %}
-    </footer>
-    #}
+    </div>
+
     <script src="{{url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{url_for('static', filename='js/ui.js') }}"></script>
+    <script src="{{url_for('static', filename='js/menus.js') }}"></script>
 </body>
 
 </html>

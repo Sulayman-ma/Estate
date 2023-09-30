@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -12,34 +12,36 @@
     </div>
     {% endfor %}
 
-    <h2>Flats on Sale</h2>
+    <div class="header">
+        <h1>Flats on Sale</h1>
+        <h2>Buy a new flat now</h2>
+    </div>
 
-    <table class="u-full-width staff">
-        <thead>
-            <tr>
-                <th>Block</th>
-                <th>Flat</th>
-                <th>Owner (Email)</th>
-                <th>Sale Cost</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for flat in flats %}
-            {% 
-                if flat.for_sale and flat not in current_user.flats.all() and not flat.get_tenant()
-            %}
-            <tr>
-                <td>{{ flat.block }}</td>
-                <td>{{ flat.number }}</td>
-                <td>{{ flat.get_owner().email or 'LSDPC' }}</td>
-                <td>{{ '₦ {:,}'.format(flat.cost) }}</td>
-                <td><a class="button button-primary" href="{{ url_for('.agreement', id=flat.id) }}">buy</a></td>
-            </tr>
-            {% endif %}
+    <div class="content">
+        <div class="pure-g">
+            {% if flats != [] %}
+
+            {% for flat in flats if flat.for_sale %}
+            <!-- one column for small screen, 2 columns for large and above -->
+            <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 flat-listing">
+                <h2 class="content-subhead">Block {{ flat.block }}, Flat {{ flat.number }}</h2>
+                <p>Owner - <a href="mailto:{{ flat.get_owner().email}}">{{ flat.get_owner().email or 'LSDPC' }}</a></p>
+                <p>Sale Cost - {{ '₦ {:,}'.format(flat.cost) }}</p>
+    
+                <a class="general pure-button pure-button-primary action" href="{{ url_for('.agreement', id=flat.id) }}">PAY NOW</a>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+
+            {% else %}
+
+            <div class="pure-u-1">
+                <h1 class="content-subhead">Sorry, there are no flats currently available, check again later.</h1>
+                <a class="general pure-button pure-button-primary" href="{{ url_for('.index') }}">GO BACK</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

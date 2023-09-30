@@ -1,0 +1,106 @@
+/* 
+MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
+-------------------------------------------------------------------------------*/
+
+
+
+/* Flash message categories
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.info { color: blue;  }
+
+.error { color: rgb(255, 0, 0); }
+
+.success { color: rgb(0, 197, 0); }
+
+.misc { color: rgb(253, 135, 0); }
+
+.warning { color: rgb(255, 94, 0); }
+
+.pop-flash {
+    position: fixed;
+    top: 0;
+    margin: 20px auto;
+    text-align: center;
+    width: 23%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    font-size: large;
+    transition: opacity 0.6s ease;
+    opacity: 1;
+    background-color: rgb(255, 255, 255);
+}
+
+/* medium screens */
+@media (min-width: 768px) {
+    .pop-flash {
+        width: 23%;
+    }
+}
+/* small screens */
+@media (min-width: 400px) {
+    .pop-flash {
+        width: 70%;
+    }
+}
+/* those annoying little screens */
+@media (min-width: 360px) {
+    .pop-flash {
+        width: 70%;
+    }
+}
+/* ----------------------------------------------- */
+
+
+
+/* MISC
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
+.mg-top-20 { margin-top: 20px; }
+.mg-bot-20 { margin-bottom: 20px; }
+
+.wide-content {
+    max-width: 960px;
+}
+
+.header-bg {
+    background-image: url('.estate/static/img/flat2.jpg');
+    background-size: auto;
+}
+
+/* ----------------------------------------------- */
+
+
+
+/* Custom Buttons
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.submit {
+    background-color: rgb(0, 197, 0);
+}
+
+.terminate {
+    background-color: red;
+}
+
+.action {
+    background-color: rgb(189, 91, 0);
+}
+
+.general {
+    border-radius: 40px;
+}
+/* ----------------------------------------------- */
+
+
+
+/* Profile Page Elements
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.flat-listing {
+    text-align: center;
+}
+/* ----------------------------------------------- */

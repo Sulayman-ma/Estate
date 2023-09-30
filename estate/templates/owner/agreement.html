@@ -4,34 +4,7 @@
 
 {% block content %}
 
-<div class="container">
-    <!-- MAIN CONTENT -->
-    <div class="lease-title">
-        <h2>TERMS AND CONDITIONS</h2>
-    </div>
-
-    <hr>
-
-    <p>This Lease Agreement (the "Agreement") is entered into between the Buyer (the "Flat Owner") and the Government (LSDPC) on [DATE].</p>
-
-    <ol style="list-style: number;">
-        <li>Property: The Owner agrees to buy from the Government, and the Government agrees to sell to the Owner, the following property:
-            <ul>
-                <li> Description: Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
-                <li>Condition: The property is provided in its current condition unless otherwise specified in writing.</li>
-            </ul>
-        </li>
-        <li>Purchase Term: The purchase term will be take effect on [DATE].</li>
-        <li>Purchase Payment: The Owner agrees to pay the amount of [PURCHASE AMOUNT], payable [MONTHLY/QUARTERLY], on or before the [DUE DATE], to the Government or as otherwise instructed.</li>
-        <li>Security Deposit: The Owner will provide a security deposit of [SECURITY DEPOSIT AMOUNT] to the Government upon signing this Agreement. The deposit will be held as security for any damages, unpaid rent, or other obligations as outlined in this Agreement.</li>
-        <li>Maintenance and Repairs: The Owner agrees to maintain the property in good condition, and to promptly report any damages or necessary repairs to the Management. The Management will be responsible for major repairs and structural issues.</li>
-        <li>Termination: Either party may terminate this Agreement with written notice of [NOTICE PERIOD] days prior to the desired termination date.</li>
-        <li>Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes any prior understandings or agreements, whether oral or written.</li>
-        <li>Severability: If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall remain in full force and effect.</li>
-    </ol>
-
-    <hr>
-
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -39,17 +12,43 @@
     </div>
     {% endfor %}
 
-    <form action="" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        The party (Owner) acknowledges and agrees to the terms of this Purchase Agreement:
-        <div class="u-pull-right">
-            <label for="">
-                <input type="checkbox" name="agree" required>
-                <span>Owner</span>
-            </label>
-            <input type="submit" class="button-primary" value="AGREE TO TERMS & CONDITIONS">
-        </div>
-    </form>
+    <div class="header">
+        <h1>Terms & Conditions</h1>
+        <h2>Read and accept the terms and conditions before proceeding</h2>
+    </div>
+
+    <div class="content">
+        <h2 class="content-subhead">This Lease Agreement (the "Agreement") is entered into between the Buyer (the "Flat Owner") and the Government (LSDPC) on <span class="info">{{ today }}</span>.</h2>
+        <ol style="list-style: number;">
+            <li>Property: The Owner agrees to buy from the Government, and the Government agrees to sell to the Owner, the following property:
+                <ul>
+                    <li> Description: Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
+                    <li>Condition: The property is provided in its current condition unless otherwise specified in writing.</li>
+                </ul>
+            </li>
+            <li>Purchase Term: The purchase term will be take effect on <span class="info">{{ today }}</span>.</li>
+            <li>Purchase Payment: The Owner agrees to pay the amount of <span class="info">{{ '₦ {:,}'.format(flat.cost) }}</span>, payable [MONTHLY/QUARTERLY], on or before the [DUE DATE], to the Government or as otherwise instructed.</li>
+            <li>Security Deposit: The Owner will provide a security deposit of [SECURITY DEPOSIT AMOUNT] to the Government upon signing this Agreement. The deposit will be held as security for any damages, unpaid rent, or other obligations as outlined in this Agreement.</li>
+            <li>Maintenance and Repairs: The Owner agrees to maintain the property in good condition, and to promptly report any damages or necessary repairs to the Management. The Management will be responsible for major repairs and structural issues.</li>
+            <li>Termination: Either party may terminate this Agreement with written notice of [NOTICE PERIOD] days prior to the desired termination date.</li>
+            <li>Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes any prior understandings or agreements, whether oral or written.</li>
+            <li>Severability: If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall remain in full force and effect.</li>
+        </ol>
+    </div>
+
+    <div class="content">
+        <form method="post" class="pure-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            The party (Owner) acknowledges and agrees to the terms of this Purchase Agreement:
+            <div class="pure-controls">
+                <input type="checkbox" name="agree" id="agree" required>
+                <label for="agree">Owner</label>
+            </div>
+            <div class="pure-controls center">
+                <input type="submit" class="general pure-button pure-button-primary submit" value="AGREE TO TERMS & CONDITIONS">
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

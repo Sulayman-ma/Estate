@@ -1,8 +1,10 @@
 {% extends "shared/base.html" %}
 
+{% block title %}Dash{% endblock %}
+
 {% block content %}
 
-<div class="container">
+<div id="main">
     <!-- FLASH MESSAGES -->
     {% for category, msg in get_flashed_messages(with_categories=True) %}
     <div class="pop-flash">
@@ -10,34 +12,44 @@
     </div>
     {% endfor %}
 
-    <!-- MAIN CONTENT -->
-    <h3>Admin Dashboard</h3>
-    <div class="row">
-        <div class="six columns">
-            <!-- List of all active agents -->
-            <table class="u-full-width shadow-div">
-                <!-- <span>Active Agents</span> -->
-                <thead>
-                    <tr>
-                        <th>Staff ID</th>
-                        <th>Name</th>
-                        <th>Is Active</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="six columns">
-            <div class="stats shadow-div">
-                <span>Estate Statistics</span>
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+    </div>
+
+    <div class="content">
+        <div class="pure-g wide-content">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <table class="pure-table pure-table-horizontal mg-top-20">
+                    <thead>
+                        <tr>
+                            <th>Staff ID</th>
+                            <th>Name</th>
+                            <th>Is Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for st in staff %}
+                        <tr>
+                            <td>{{ st.username }}</td>
+                            <td>
+                                {{ st.first_name }} {{ st.middle_name }} {{ st.last_name }}
+                            </td>
+                            {% if not st.is_active %}
+                            <td>❌</td>
+                            {% else %}
+                            <td>✔</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pure-u-1 pure-u-md-1-2">
+                stuff here?
             </div>
         </div>
     </div>
-    
+
 </div>
 
 {% endblock %}
