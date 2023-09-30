@@ -30,20 +30,8 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
     background-color: rgb(255, 255, 255);
 }
 
-/* medium screens */
-@media (min-width: 768px) {
-    .pop-flash {
-        width: 23%;
-    }
-}
 /* small screens */
-@media (min-width: 400px) {
-    .pop-flash {
-        width: 70%;
-    }
-}
-/* those annoying little screens */
-@media (min-width: 360px) {
+@media (max-width: 400px) {
     .pop-flash {
         width: 70%;
     }
