@@ -17,11 +17,10 @@
         <h2>Secure a new lease</h2>
     </div>
 
-    <div class="content">
+    <div class="content wide-content">
         <div class="pure-g">
             {% if flats != [] %}
-
-            {% for flat in flats %}
+            {% for flat in flats if flat not in current_user.flats.all() %}
             <!-- one column for small screen, 2 columns for large and above -->
             <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 flat-listing">
                 <h2 class="content-subhead">Block {{ flat.block }}, Flat {{ flat.number }}</h2>
@@ -30,8 +29,8 @@
     
                 {% if flat.get_tenant() %}
                 <button disabled class="general pure-button">OCCUPIED</button>
-                {% elif flat.get_owner() == None or flat.rent == 0 %}
-                <button disabled class="general pure-button">UNAVAILABLE</button>
+                {% elif flat.get_owner() == None or not flat.for_rent %}
+                <button disabled class="general terminate pure-button">UNAVAILABLE</button>
                 {% else %}
                 <a class="general action pure-button pure-button-primary" href="{{ url_for('.agreement', id=flat.id) }}">PAY NOW</a>
                 {% endif %}

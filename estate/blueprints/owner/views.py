@@ -71,6 +71,9 @@ def modify_flat(id):
     if form.is_submitted():
         try:
             flat.rent = form.rent.data
+            if flat.get_tenant() and not form.for_rent.data:
+                flash('Flat has an active tenant ⚠', 'warning')
+                return redirect(url_for('.modify_flat', id=id))
             flat.for_rent = form.for_rent.data
             flat.for_sale = form.for_sale.data
             flat.cost = form.cost.data
