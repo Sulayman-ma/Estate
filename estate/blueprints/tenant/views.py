@@ -80,9 +80,12 @@ def flats_for_rent():
 def terminate(id):
     """ Terminate lease. """
     flat = Flat.query.get(id)
+    if flat.rent_overdue > 0:
+        flash('Please pay overdue rent', 'error')
+        return redirect(url_for('.index'))
     current_user.flats.remove(flat)
     db.session.commit()
-    flash('Lease terminated for Block {}, Flat {}'.format(flat.block, flat.number))
+    flash('Lease terminated for Block {}, Flat {}'.format(flat.block, flat.number), 'info')
     return redirect(url_for('.index'))
 
 
@@ -107,7 +110,7 @@ def pay_rent(id: int):
             return redirect(url_for('.pay_rent', id=id))
         # validate rent amount to ensure it is within bounds
         if form.amount.data > flat.rent:
-            flash('Rent cannot exceed the agreed upon price of ₦ {:,}'.format(flat.rent), 'warning')
+            flash('Payment must not exceed ₦ {:,}'.format(flat.rent_overdue), 'warning')
             return redirect(url_for('.pay_rent', id=id))
         # paystack transaction object
         transaction = current_app.config.get('API_OBJECT')
@@ -144,28 +147,23 @@ def renew_rent(id: int):
     if status is True:
         # set overdue rent amount
         amount = session.pop('payment_amount')
-        flat.rent_overdue -= amount
-
-        # payment_status = session.pop('payment_status')
-
-        # create payment record
-        # payment = Payment(
-        #     type = 'rent',
-        #     amount = amount,
-        #     status = payment_status,
-        #     username = current_user.username,
-        #     flat_id = id
-        # )
-        # db.session.add(payment)
-
-        # if lease is new, set new lease start date and expiry
+        # first time payment upon acquiring lease
         if flat not in current_user.flats.all():
             current_user.flats.add(flat)
             flat.lease_start = datetime.today()
             flat.lease_expiry = flat.lease_start + relativedelta(years=1)
-        # else extend rent expiry upon full payment
-        if flat.rent_overdue == 0:
-            flat.lease_expiry = flat.lease_expiry + relativedelta(years=1)
+            flat.rent_overdue = flat.rent - amount
+        # recurring payment
+        else:
+            # set overdue to 0 if payment is full
+            if amount == flat.rent:
+                flat.rent_overdue = 0
+            else:
+                # for a partial payment, reduce overdue
+                flat.rent_overdue = flat.rent_overdue - amount
+            # else extend rent expiry upon full payment
+            if flat.rent_overdue == 0:
+                flat.lease_expiry = flat.lease_expiry + relativedelta(years=1)
         db.session.commit()
         session.pop('reference')
         flash('Payment successful ✔', 'success')
