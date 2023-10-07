@@ -32,8 +32,14 @@ from datetime import datetime
 @login_required
 @role_required('ADMIN')
 def index():
+    users = User.query.all()
+    # set of all departments
+    roles = {user.role for user in users}
+    counts = {}
+    for role in roles:
+        counts.setdefault(role, User.query.filter_by(role=role).count())
     staff = User.get_users('staff').all()
-    return render_template('admin/dash.html', staff=staff)
+    return render_template('admin/dash.html', staff=staff, counts=counts)
 
 
 @admin.route('/admin/all_staff')

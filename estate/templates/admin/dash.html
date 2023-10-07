@@ -45,7 +45,22 @@
                 </table>
             </div>
             <div class="pure-u-1 pure-u-md-1-2">
-                Resident Statistics
+                <table class="pure-table pure-table-horizontal mg-top-20">
+                    <thead>
+                        <tr>
+                            <th>ROLE</th>
+                            <th>POPULATION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k, v in counts.items() %}
+                            <tr>
+                                <td>{{ k }}</td>
+                                <td>{{ v }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

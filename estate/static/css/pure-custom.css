@@ -4,7 +4,7 @@ body {
 
 .pure-img-responsive {
     max-width: 100%;
-    height: auto;
+    height: min-content;
 }
 
 /*
@@ -60,7 +60,7 @@ The content `<div>` is where all your content goes.
         margin: 0.2em 0;
         font-size: 3em;
         font-weight: 300;
-        color: #000;
+        color: #c5c5c5;
     }
      .header h2 {
         font-weight: 300;

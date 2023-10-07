@@ -22,10 +22,12 @@
             {{ form.hidden_tag() }}
     
             <p>Rent amount is {{ '₦ {:,}'.format(rent) }}, you may pay partially or fully. Partial payments must be completed before the next payment is due. Terms & Conditions apply.</p>
-            {% if flat.rent_overdue > 0 %}
-            <span class="error">Overdue - {{ '₦ {:,}'.format(flat.rent_overdue) }}</span>
-            {% endif %}
 
+            <div class="pure-control-group">
+                {% if flat.rent_overdue > 0 %}
+                <span class="center error">Overdue - {{ '₦ {:,}'.format(flat.rent_overdue) }}</span>
+                {% endif %}
+            </div>
             <div class="pure-control-group">
                 {{ form.amount.label }}
                 {{ form.amount(max='{{ flat.rent }}') }}
@@ -37,11 +39,10 @@
             <div class="pure-controls">
                 {{ form.confirm(class='pure-button pure-button-primary submit general') }}
             </div>
+            <div class="pure-controls">
+                <a class="" href="{{ url_for('.flats_for_rent') }}">Back to Flats</a>
+            </div>
         </form>
-    </div>
-
-    <div class="content">
-        <a class="pure-button pure-button-primary general" href="{{ url_for('.flats_for_rent') }}"><< Back to Flats</a>
     </div>
 </div>
 
