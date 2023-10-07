@@ -18,9 +18,9 @@
     </div>
 
     <div class="content">
-        {% for msg in notices %}
+        {% for msg in notices if msg.target == 'ALL' or msg.target == '{}S'.format(current_user.role) %}
         <h2>
-            <a href="{{ url_for('admin.notice', id=msg.id) }}">{{ msg.subject }}</a>
+            <a class="subject" href="{{ url_for('admin.notice', id=msg.id) }}">{{ msg.subject }}</a>
         </h2>
         <h4>
             {{ msg.timestamp.strftime("%Y-%B-%d") }}, 

@@ -50,6 +50,7 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 }
 
 .mg-top-20 { margin-top: 20px; }
+.mg-top-50 { margin-top: 50px; }
 .mg-bot-20 { margin-bottom: 20px; }
 
 .wide-content {
@@ -64,6 +65,7 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 .login {
     width: 70%;
     margin: auto;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.356);
 }
 
 /* small screens */
@@ -79,28 +81,64 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
         margin: auto;
     }
 }
+
+.gallery {
+    width: 100%;
+    /* margin: auto; */
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+
+.font {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: black;
+    font-size: 50px;
+}
+
+.center-text {
+    text-align: center;
+}
+
 /* ----------------------------------------------- */
 
 
 
 /* Custom Buttons
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
+a.submit,
 .submit {
     background-color: rgb(0, 197, 0);
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+a.terminate,
 .terminate {
-    background-color: red;
-    color: rgb(0, 0, 0);
+    background-color: rgb(173, 32, 32);
+    color: rgb(255, 255, 255);
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+a.action,
 .action {
     background-color: rgb(189, 91, 0);
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+a.general,
 .general {
+    background-color: rgb(9, 63, 85);
     border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+
 /* ----------------------------------------------- */
 
 
@@ -110,4 +148,19 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 .flat-listing {
     text-align: center;
 }
+
+.flat-listing h2 {
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+/* ----------------------------------------------- */
+
+
+/* Notices
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.subject {
+    text-decoration: none;
+    color: rgb(9, 63, 85);
+}
+
 /* ----------------------------------------------- */

@@ -58,7 +58,7 @@ def agreement(id):
 @role_required('OWNER')
 def bulletin():
     """ Show list of all notices for Tenants """
-    notices = Notice.query.filter_by(target='OWNERS').all()
+    notices = Notice.query.all()
     return render_template('shared/bulletin.html', notices=notices)
 
 

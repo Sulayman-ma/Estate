@@ -15,12 +15,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pure-custom.css') }}", type="text/css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_custom.css') }}", type="text/css">
 
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}Glover - Login{% endblock %}</title>
 </head>
 
 <body>
     <!-- Main Content -->
-    <div id="main" class="login">
+    <div id="main" class="">
         <!-- FLASH MESSAGES -->
         {% for category, msg in get_flashed_messages(with_categories=True) %}
         <div class="pop-flash">
@@ -28,11 +28,32 @@
         </div>
         {% endfor %}
 
-        <div class="header">
-            <h1>Login</h1>
+        <!-- <div class="header">
+            <h1>Glover Estate</h1>
+        </div> -->
+
+        <div class="header gallery">
+            <div class="pure-g">
+                <div class="pure-u-1-4 login-img">
+                    <img src="{{ url_for('static', filename='img/block1.jpg') }}" alt="" class="pure-img-responsive">
+                </div>
+                <div class="pure-u-1-4 login-img">
+                    <img src="{{ url_for('static', filename='img/block2.jpg') }}" alt="" class="pure-img-responsive">
+                </div>
+                <div class="pure-u-1-4 login-img">
+                    <img src="{{ url_for('static', filename='img/block3.jpg') }}" alt="" class="pure-img-responsive">
+                </div>
+                <div class="pure-u-1-4 login-img">
+                    <img src="{{ url_for('static', filename='img/block4.jpg') }}" alt="" class="pure-img-responsive">
+                </div>
+            </div>
         </div>
-    
+        
         <div class="content">
+            <h1 class="center-text font">Glover Estate</h1>
+        </div>
+
+        <div class="content login mg-top-50">
             <form method="post" class="pure-form pure-form-aligned">
                 <fieldset>
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

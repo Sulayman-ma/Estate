@@ -27,30 +27,29 @@
 
             {% for flat in flats %}
             <!-- one column for small screen, 2 columns for large and above -->
-            <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 wide-content">
-                <h2 class="content-subhead">Block {{ flat.block }}, Flat {{ flat.number }}</h2>
+            <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 wide-content flat-listing">
+                <h2 class="content-subhead">
+                    Block {{ flat.block }} <br> Flat {{ flat.number }}
+                </h2>
+                Owner - <a class="subject" href="mailto:{{ flat.get_owner().email }}">{{ flat.get_owner().email or None }}</a>
                 <p>
-                    Lease Start - <span class="success">{{ flat.lease_start }}</span>
+                    Lease Start - {{ flat.lease_start }}
                 </p>
                 <p>
-                    Lease Expiry - <span class="error">{{ flat.lease_expiry }}</span>
+                    Lease Expiry - {{ flat.lease_expiry }}
                 </p>
-                <p>
-                    Owner - <a href="mailto:{{ flat.get_owner().email }}">{{ flat.get_owner().email or None }}</a>
-                </p>
-                <p>Rent Amount - <span class="misc">{{ '₦ {:,}'.format(flat.rent) }}</span></p>
+                <p>Rent Amount - {{ '₦ {:,}'.format(flat.rent) }}</p>
 
                 <!-- RENT PAYMENT -->
                 <!-- if overdue > 0 or next payment is due -->
                 {% if flat.rent_overdue > 0 or today >= flat.lease_expiry %}
-                <p class="error">Overdue - {{ '₦ {:,}'.format(flat.rent_overdue) }}</p>
-                <a class="pure-button pure-button-primary action general" href="{{ url_for('.pay_rent', id=flat.id) }}">PAY NOW</a>
+                <h4 class="error">Overdue - {{ '₦ {:,}'.format(flat.rent_overdue) }}</h4>
+                <a class="pure-button pure-button-primary general" href="{{ url_for('.pay_rent', id=flat.id) }}">PAY NOW</a>
                 {% else %}
-                <p class="success">FULLY PAID</p>
-                <button disabled class="general pure-button">PAY NOW</button>
+                <h4 class="success">FULLY PAID</h4>
                 {% endif %}
 
-                <a href="{{ url_for('.terminate', id=flat.id) }}" class="pure-button pure-button-primary button-error terminate general">TERMINATE</a>
+                <a href="{{ url_for('.terminate', id=flat.id) }}" class="pure-button pure-button-primary button-error terminate">TERMINATE</a>
             </div>
             {% endfor %}
 
