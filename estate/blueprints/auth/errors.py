@@ -15,7 +15,7 @@ def forbidden(e):
 
     An anonymous user attempts to access a blueprint, upon being redirected to login, they are authenticated and if they are unauthorized, they are then redirected to their appropriate blueprint."""
     endpoint = '{}.index'.format(current_user.role.lower())
-    flash('You naughty naughty, teasing me 😏', 'misc')
+    flash('ACCESS DENIED', 'error')
     return redirect(url_for(endpoint))
 
 

@@ -21,10 +21,10 @@
         <div class="pure-g">
             {% if flats != [] %}
 
-            {% for flat in flats if flat.for_sale %}
+            {% for flat in flats if flat.for_sale and flat not in current_user.flats.all() %}
             <!-- one column for small screen, 2 columns for large and above -->
             <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3 flat-listing">
-                <h2 class="content-subhead">Block {{ flat.block }}, Flat {{ flat.number }}</h2>
+                <h2 class="content-subhead">Block {{ flat.block }} <br> Flat {{ flat.number }}</h2>
                 <p>Owner - <a href="mailto:{{ flat.get_owner().email}}">{{ flat.get_owner().email or 'LSDPC' }}</a></p>
                 <p>Sale Cost - {{ '₦ {:,}'.format(flat.cost) }}</p>
     

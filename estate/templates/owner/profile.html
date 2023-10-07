@@ -15,10 +15,10 @@
     <!-- MAIN CONTENT -->
     <!-- ONLY ALLOW AUTHENTICATED USERS -->
     {% if current_user.is_authenticated %}
-    <div class="header header-bg" style="background-image: url('.estate/static/img/flat2.jpg');">
+    <div class="header header-bg">
         <h1>Owner Profile</h1>
         <h2>Welcome! Manage your flats and edit personal information.</h2>
-        <a class="pure-button pure-button-primary mg-bot-20 general" href="{{ url_for('auth.edit_profile', id=current_user.id) }}">EDIT PROFILE</a>
+        <a class="general pure-button pure-button-primary mg-bot-20" href="{{ url_for('auth.edit_profile', id=current_user.id) }}">EDIT PROFILE</a>
     </div>
 
     <div class="content wide-content">
@@ -51,7 +51,7 @@
                 {% else %}
                 <p class="success">FULLY PAID</p>
                 {% endif %}
-                <a class="pure-button pure-button-primary general" href="{{ url_for('.modify_flat', id=flat.id) }}">Manage Flat</a>
+                <a class="general pure-button pure-button-primary" href="{{ url_for('.modify_flat', id=flat.id) }}">Manage Flat</a>
             </div>
             {% endfor %}
         </div>

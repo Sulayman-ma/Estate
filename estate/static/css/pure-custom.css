@@ -1,5 +1,5 @@
 body {
-    color: #777;
+    color: #000000;
 }
 
 .pure-img-responsive {
@@ -48,16 +48,19 @@ The content `<div>` is where all your content goes.
 }
 
 .header {
-     margin: 0;
-     color: #333;
-     text-align: center;
-     padding: 2.5em 2em 0;
-     border-bottom: 1px solid #eee;
+    margin: 0;
+    color: #333;
+    text-align: center;
+    padding: 2.5em 2em 0;
+    border-bottom: 1px solid #eee;
+    background-color: rgb(9, 63, 85);
+    font-family: Georgia, 'Times New Roman', Times, serif;
  }
     .header h1 {
         margin: 0.2em 0;
         font-size: 3em;
         font-weight: 300;
+        color: #000;
     }
      .header h2 {
         font-weight: 300;
@@ -128,7 +131,7 @@ appears on the left side of the page.
     */
     #menu .pure-menu-selected,
     #menu .pure-menu-heading {
-        background: #1f8dd6;
+        background: rgb(9, 63, 85);
     }
         /*
         This styles a link within a selected menu item `<li>`.

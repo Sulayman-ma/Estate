@@ -87,20 +87,34 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .submit {
     background-color: rgb(0, 197, 0);
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .terminate {
     background-color: red;
     color: rgb(0, 0, 0);
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .action {
     background-color: rgb(189, 91, 0);
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+a.general,
 .general {
+    background-color: rgb(9, 63, 85);
     border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+
 /* ----------------------------------------------- */
 
 
@@ -110,4 +124,19 @@ MY CUSTOM CSS FILES FOR FLASK FEATURES AND PERSONAL ADDITIONS
 .flat-listing {
     text-align: center;
 }
+
+.flat-listing h2 {
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+/* ----------------------------------------------- */
+
+
+/* Notices
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.subject {
+    text-decoration: none;
+    color: rgb(9, 63, 85);
+}
+
 /* ----------------------------------------------- */

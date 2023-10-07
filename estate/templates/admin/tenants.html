@@ -17,9 +17,11 @@
     </div>
 
     <div class="content">
-        <div class="search-div">
-            <input type="text" onkeyup="search()" placeholder="Search for tenant by name" id="searchBtn">
-        </div>
+        <form action="" class="pure-form pure-form-stacked">
+            <div class="pure-controls">
+                <input type="text" onkeyup="search()" placeholder="Search by username" id="searchBtn">
+            </div>
+        </form>
 
         <table class="pure-table pure-table-horizontal mg-top-20 pure-table-striped">
             <thead>
@@ -27,7 +29,7 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Flats Rented</th>
-                    <th>Years Overdue</th>
+                    <th>Rent Overdue</th>
                 </tr>
             </thead>
             <tbody>
