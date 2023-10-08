@@ -15,7 +15,7 @@ from wtforms.validators import Email
 
 class RegisterStaff(FlaskForm):
     first_name = StringField(label="First Name", render_kw={
-        'placeholder': 'Firt Name',
+        'placeholder': 'First Name',
         'required': 'required'
     })
     middle_name = StringField(label="Middle Name", render_kw={
@@ -37,7 +37,7 @@ class RegisterStaff(FlaskForm):
         'required': 'required',
     })
     role = SelectField(label="Role", choices=[
-        'WORKER', 'MANAGER'
+        'PLUMBER', 'ELECTRICIAN', 'MANAGER', 'SECURITY', 'CLEANER'
     ])
     is_active = BooleanField()
     register = SubmitField(label='Register')
@@ -45,7 +45,7 @@ class RegisterStaff(FlaskForm):
 
 class EditStaffInfo(FlaskForm):
     first_name = StringField(label="First Name", render_kw={
-        'placeholder': 'Firt Name'
+        'placeholder': 'First Name'
     })
     middle_name = StringField(label="Middle Name", render_kw={
         'placeholder': 'Middle Name'
@@ -63,7 +63,7 @@ class EditStaffInfo(FlaskForm):
         'placeholder': 'Number'
     })
     role = SelectField(label="Role", choices=[
-        'WORKER', 'MANAGER'
+        'PLUMBER', 'ELECTRICIAN', 'MANAGER', 'SECURITY', 'CLEANER'
     ], render_kw = {'disabled': 'disabled'}
     )
     is_active = BooleanField()

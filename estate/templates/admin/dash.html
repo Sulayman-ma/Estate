@@ -22,23 +22,17 @@
                 <table class="pure-table pure-table-horizontal mg-top-20">
                     <thead>
                         <tr>
-                            <th>Staff ID</th>
                             <th>Name</th>
-                            <th>Is Active</th>
+                            <th>Role</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for st in staff %}
                         <tr>
-                            <td>{{ st.username }}</td>
                             <td>
                                 {{ st.first_name }} {{ st.middle_name }} {{ st.last_name }}
                             </td>
-                            {% if not st.is_active %}
-                            <td>❌</td>
-                            {% else %}
-                            <td>✔</td>
-                            {% endif %}
+                            <td>{{ st.role }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
