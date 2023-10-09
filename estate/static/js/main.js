@@ -11,7 +11,7 @@ function search() {
     for(let row of rows) {
         // staff name from class name
         let name = row.className.toLowerCase()
-        if(name.startsWith(query)) {
+        if(name.includes(query)) {
             row.removeAttribute('style')
         } else {
             row.setAttribute('style', 'display: none;')

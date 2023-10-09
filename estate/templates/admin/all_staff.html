@@ -17,9 +17,11 @@
     </div>
 
     <div class="content">
-        <div class="search-bar">
-            <input type="text" onkeyup="search()" placeholder="Search for staff by name" id="searchBtn">
-        </div>
+        <form action="" class="pure-form pure-form-stacked">
+            <div class="pure-controls">
+                <input type="text" onkeyup="search()" placeholder="Search by name" id="searchBtn">
+            </div>
+        </form>
 
         <table class="pure-table pure-table-horizontal mg-top-20">
             <thead>
@@ -28,7 +30,6 @@
                     <th>Role</th>
                     <th>Name</th>
                     <th>Is Active</th>
-                    <th>Is Resident</th>
                     <th></th>
                 </tr>
             </thead>
@@ -42,11 +43,6 @@
                     <td>✔</td>
                     {% else %}
                     <td>❌</td>
-                    {% endif %}
-                    {% if st.flats.all() == [] %}
-                    <td>❌</td>
-                    {% else %}
-                    <td>✔</td>
                     {% endif %}
                     <td><a href="{{ url_for('.edit_staff', id=st.id) }}" class="general pure-button pure-button-primary">Edit</a></td>
                 </tr>
